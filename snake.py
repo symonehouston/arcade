@@ -1,5 +1,6 @@
 # 4/6: 20 min reading manuals and beginning setup
-# 4/6: 1 hr creating a sprite and trying to get it to move
+        #Getting started: https://realpython.com/pygame-a-primer/
+# 4/6: 2 hr creating a sprite and getting movement
 
 import pygame
 
@@ -17,9 +18,9 @@ class Snake(pygame.sprite.Sprite):
     # Define moving function
     def move(self, key_pressed):
         if key_pressed[K_UP]:
-            self.rect.move_ip(0, 5)
-        if key_pressed[K_DOWN]:
             self.rect.move_ip(0, -5)
+        if key_pressed[K_DOWN]:
+            self.rect.move_ip(0, 5)
         if key_pressed[K_LEFT]:
             self.rect.move_ip(-5, 0)
         if key_pressed[K_RIGHT]:
@@ -64,7 +65,7 @@ while running:
     screen.fill((0, 0, 0))
 
     # Draw snake
-    screen.blit(snake.surf, (screen_width/2, screen_height/2))
+    screen.blit(snake.surf, snake.rect)
 
     # Update display
     pygame.display.flip()
