@@ -2,11 +2,12 @@
         #Getting started: https://realpython.com/pygame-a-primer/
 # 4/6: 2 hr creating a sprite and getting movement
 # 4/9: 1 hr getting constant movement and ending game for hit edge
+# 4/10: 20 min playing around with end game screen
 
 import pygame
 
 # Import for ability to use keyboard keys
-from pygame.locals import (K_UP, K_DOWN, K_LEFT, K_RIGHT, K_ESCAPE, KEYDOWN, QUIT)
+from pygame.locals import *
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
@@ -106,3 +107,11 @@ while running:
 
     # Update display
     pygame.display.flip()
+
+# End screen
+end = False
+while not end:
+    screen.fill((0, 255, 0))
+    pygame.display.flip()
+    pygame.time.delay(3000)
+    end = True
