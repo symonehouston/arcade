@@ -4,6 +4,7 @@
 # 4/9: 1 hr getting constant movement and ending game for hit edge
 # 4/10: 20 min playing around with end game screen
 # 4/15: 1 hr 20 min creating food; currently unable to remove food after collision
+# 4/15: 1 hr getting food collision and appearance to work
 
 import pygame
 import random
@@ -22,7 +23,7 @@ class Snake(pygame.sprite.Sprite):
     # Define constant moving function
     def constant_move(self, x_direction, y_direction):
         milliseconds = pygame.time.get_ticks()
-        if milliseconds % 50 == 0:
+        if milliseconds % 25 == 0:
             self.rect.move_ip(x_direction, y_direction)
 
     # Define moving function
@@ -85,9 +86,6 @@ foods = pygame.sprite.Group()
 food = Food()
 foods.add(food)
 
-# Create add_food event
-add_food = pygame.USEREVENT + 1
-
 # Create display screen
 screen = pygame.display.set_mode((screen_width, screen_height))
 
@@ -122,12 +120,6 @@ while running:
         elif event.type == QUIT:
             running = False
 
-        # Check for new food
-        elif event.type == add_food:
-            new_food = Food()
-            foods.add(new_food)
-
-
     # Fill the screen with black
     screen.fill((0, 0, 0))
 
@@ -137,11 +129,24 @@ while running:
     # Draw snake
     screen.blit(snake.surf, snake.rect)
 
-    # Update food
-    foods.update()
+    # Check for collisions
+    if pygame.sprite.spritecollideany(snake, foods):
+        for item in foods:
+            # Remove food
+            foods.remove(item)
+
+            # Add new food
+            new_food = Food()
+            foods.add(new_food)
+
+            # Add on snake body
 
     # Draw food
-    screen.blit(food.surf, food.rect)
+    for item in foods:
+        screen.blit(item.surf, item.rect)
+
+    # Update foods
+    foods.update()
 
     # Update display
     pygame.display.flip()
