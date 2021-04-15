@@ -3,8 +3,10 @@
 # 4/6: 2 hr creating a sprite and getting movement
 # 4/9: 1 hr getting constant movement and ending game for hit edge
 # 4/10: 20 min playing around with end game screen
+# 4/15: 1 hr 20 min creating food; currently unable to remove food after collision
 
 import pygame
+import random
 
 # Import for ability to use keyboard keys
 from pygame.locals import *
@@ -20,7 +22,7 @@ class Snake(pygame.sprite.Sprite):
     # Define constant moving function
     def constant_move(self, x_direction, y_direction):
         milliseconds = pygame.time.get_ticks()
-        if milliseconds % 100 == 0:
+        if milliseconds % 50 == 0:
             self.rect.move_ip(x_direction, y_direction)
 
     # Define moving function
@@ -52,6 +54,20 @@ class Snake(pygame.sprite.Sprite):
             truth = False
         return truth
 
+# Class for food
+class Food(pygame.sprite.Sprite):
+    def __init__(self):
+        super(Food, self).__init__()
+        self.surf = pygame.Surface((25, 25))
+        self.surf.fill((0, 255, 255))
+        self.rect = self.surf.get_rect(
+            center = (random.randint(0, screen_width),
+                      random.randint(0, screen_height)))
+
+    def update(self):
+        if self.rect.colliderect(snake):
+            self.kill()
+
 # Screen dimensions
 screen_width = 500
 screen_height = 500
@@ -61,6 +77,16 @@ pygame.init()
 
 # Create snake
 snake = Snake()
+
+# Create food group
+foods = pygame.sprite.Group()
+
+# Create food
+food = Food()
+foods.add(food)
+
+# Create add_food event
+add_food = pygame.USEREVENT + 1
 
 # Create display screen
 screen = pygame.display.set_mode((screen_width, screen_height))
@@ -78,7 +104,7 @@ while running:
     if not snake.on_screen():
         running = False
 
-    # for loop through the event queue
+    # Event for loop
     for event in pygame.event.get():
 
         # Check for KEYDOWN event
@@ -96,14 +122,26 @@ while running:
         elif event.type == QUIT:
             running = False
 
-    # Get constant movement
-    snake.constant_move(x_direction, y_direction)
+        # Check for new food
+        elif event.type == add_food:
+            new_food = Food()
+            foods.add(new_food)
+
 
     # Fill the screen with black
     screen.fill((0, 0, 0))
 
+    # Get snake constant movement
+    snake.constant_move(x_direction, y_direction)
+
     # Draw snake
     screen.blit(snake.surf, snake.rect)
+
+    # Update food
+    foods.update()
+
+    # Draw food
+    screen.blit(food.surf, food.rect)
 
     # Update display
     pygame.display.flip()
