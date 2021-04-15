@@ -5,6 +5,7 @@
 # 4/10: 20 min playing around with end game screen
 # 4/15: 1 hr 20 min creating food; currently unable to remove food after collision
 # 4/15: 1 hr getting food collision and appearance to work
+# 4/15: 1 hr attempting snake addition
 
 import pygame
 import random
@@ -79,6 +80,9 @@ pygame.init()
 # Create snake
 snake = Snake()
 
+# Create snake body group
+body = pygame.sprite.Group()
+
 # Create food group
 foods = pygame.sprite.Group()
 
@@ -92,6 +96,9 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # Set initial direction to the right
 x_direction = 5
 y_direction = 0
+
+# Initialize position list
+position_list = []
 
 # Variable to keep the main loop running
 running = True
@@ -126,9 +133,6 @@ while running:
     # Get snake constant movement
     snake.constant_move(x_direction, y_direction)
 
-    # Draw snake
-    screen.blit(snake.surf, snake.rect)
-
     # Check for collisions
     if pygame.sprite.spritecollideany(snake, foods):
         for item in foods:
@@ -140,6 +144,30 @@ while running:
             foods.add(new_food)
 
             # Add on snake body
+            snake_body = Snake()
+            body.add(snake_body)
+
+    # Body
+    if x_direction == 0 and y_direction == -5:
+        position = (snake.rect[0], snake.rect[1] - 25)
+    elif x_direction == 0 and y_direction == 5:
+        position = (snake.rect[0], snake.rect[1] + 25)
+    elif x_direction == -5 and y_direction == 0:
+        position = (snake.rect[0] + 25, snake.rect[1])
+    elif x_direction == 5 and y_direction == 0:
+        position = (snake.rect[0] - 25, snake.rect[1])
+
+    milliseconds = pygame.time.get_ticks()
+    if milliseconds % 2000 == 0:
+        if len(position_list) > 1:
+            del position_list[0]
+        position_list.append(snake.rect)
+        print(position_list)
+
+    # Draw snake
+    screen.blit(snake.surf, snake.rect)
+    for item in body:
+        screen.blit(item.surf, position_list[0])
 
     # Draw food
     for item in foods:
