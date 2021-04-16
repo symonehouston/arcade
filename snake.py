@@ -6,6 +6,7 @@
 # 4/15: 1 hr 20 min creating food; currently unable to remove food after collision
 # 4/15: 1 hr getting food collision and appearance to work
 # 4/15: 1 hr attempting snake addition
+# 4/16: 30 in gathertown and working on snake body addition
 
 import pygame
 import random
@@ -147,22 +148,13 @@ while running:
             snake_body = Snake()
             body.add(snake_body)
 
-    # Body
-    if x_direction == 0 and y_direction == -5:
-        position = (snake.rect[0], snake.rect[1] - 25)
-    elif x_direction == 0 and y_direction == 5:
-        position = (snake.rect[0], snake.rect[1] + 25)
-    elif x_direction == -5 and y_direction == 0:
-        position = (snake.rect[0] + 25, snake.rect[1])
-    elif x_direction == 5 and y_direction == 0:
-        position = (snake.rect[0] - 25, snake.rect[1])
+    # Append head location to position list
+    position_list.append(snake.rect)
+    if len(position_list) >= 100:
+        position_list = position_list[-100:]
 
-    milliseconds = pygame.time.get_ticks()
-    if milliseconds % 2000 == 0:
-        if len(position_list) > 1:
-            del position_list[0]
-        position_list.append(snake.rect)
-        print(position_list)
+    # Body
+
 
     # Draw snake
     screen.blit(snake.surf, snake.rect)
