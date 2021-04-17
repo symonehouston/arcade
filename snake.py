@@ -12,6 +12,7 @@
 # 4/17: 2 hrs SNAKE BODY WORKING WOOHOO (thanks Abby on gathertown); tyring to get collisions to work
 # 4/17: 30 min snake body collision is working decently
 # 4/17: 30 min starting to get different snake skins
+# 4/17: 1 hr more work on skins and opening screen
 
 # IMPORTS ##############################
 
@@ -22,14 +23,17 @@ import os
 # Import for ability to use keyboard keys
 from pygame.locals import *
 
-# SET-UP (CLASSES AND VARIABLES) ##############################
+# END IMPORTS ##############################
+
+
+# DEFINE CLASSES ##############################
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
     # Initialize
     def __init__(self):
         super(Snake, self).__init__()
-        self.surf = pygame.image.load(os.path.join('images', 'green.jpg'))
+        self.surf = pygame.image.load(os.path.join('images', snake_skin))
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
 
@@ -83,12 +87,77 @@ class Food(pygame.sprite.Sprite):
             center = (random.randint(0, screen_width),
                       random.randint(0, screen_height)))
 
+# END DEFINE CLASSES ##############################
+
+
+# SET-UP DISPLAY ##############################
+
+# Initialize
+pygame.init()
+
 # Screen dimensions
 screen_width = 500
 screen_height = 500
 
-# Initialize
-pygame.init()
+# Create display screen
+screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Set-up font
+font = pygame.font.SysFont(None, 24)
+
+# END SET-UP DISPLAY ##############################
+
+
+# OPENING SCREEN ##############################
+
+# Variable to keep opening screen running
+open_running_skin = True
+
+# Opening loop skin
+while open_running_skin:
+    # Fill the screen with black
+    screen.fill((0, 0, 0))
+
+    # Display text
+    text = font.render('Press num', True, (255, 0, 0))
+    screen.blit(text, (screen_width/2 - (text.get_rect().width)/2,
+                      screen_height/2 - (text.get_rect().height)/2))
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == K_1:
+                snake_skin = 'green.jpg'
+                open_running_skin = False
+
+            if event.key == K_2:
+                snake_skin = 'coral.png'
+                open_running_skin = False
+
+            if event.key == K_3:
+                snake_skin = 'rattle.png'
+                open_running_skin = False
+
+            if event.key == K_4:
+                snake_skin = 'eel.jpeg'
+                open_running_skin = False
+
+            # Check for ESC key press
+            if event.key == K_ESCAPE:
+                open_running_skin = False
+
+        # Check for QUIT event
+        elif event.type == QUIT:
+            open_running_skin = False
+
+    # Update display
+    pygame.display.flip()
+
+# END OPENING SCREEN ##############################
 
 # Create snake
 snake = Snake()
@@ -102,9 +171,6 @@ foods = pygame.sprite.Group()
 # Create food
 food = Food()
 foods.add(food)
-
-# Create display screen
-screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Set initial direction to the right
 x_direction = 5
@@ -182,11 +248,11 @@ while running:
     i = 1
     for item in body:
         # Draw snake body
-        screen.blit(item.surf, position_list[-6*i - 1])
+        screen.blit(item.surf, position_list[-5*i - 1])
 
         # Collision detection
-        x_pos = position_list[-6*i - 1][0]
-        y_pos = position_list[-6*i - 1][1]
+        x_pos = position_list[-5*i - 1][0]
+        y_pos = position_list[-5*i - 1][1]
         head_x = position_list[-1][0]
         head_y = position_list[-1][1]
         for z in range(7, 18):
@@ -208,9 +274,6 @@ while running:
     pygame.display.flip()
 
 # END SCREEN ##############################
-
-# Set-up font
-font = pygame.font.SysFont(None, 24)
 
 # Make score into string
 string_score = "Score = " + str(score)
