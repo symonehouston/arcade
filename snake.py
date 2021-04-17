@@ -7,6 +7,7 @@
 # 4/15: 1 hr getting food collision and appearance to work
 # 4/15: 1 hr attempting snake addition
 # 4/16: 30 in gathertown and working on snake body addition
+# 4/16 1 hr still working on snake body addition
 
 import pygame
 import random
@@ -16,6 +17,7 @@ from pygame.locals import *
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
+    # Initialize
     def __init__(self):
         super(Snake, self).__init__()
         self.surf = pygame.Surface((25, 25))
@@ -27,6 +29,7 @@ class Snake(pygame.sprite.Sprite):
         milliseconds = pygame.time.get_ticks()
         if milliseconds % 25 == 0:
             self.rect.move_ip(x_direction, y_direction)
+            return self.rect
 
     # Define moving function
     def move(self, key_pressed):
@@ -59,6 +62,7 @@ class Snake(pygame.sprite.Sprite):
 
 # Class for food
 class Food(pygame.sprite.Sprite):
+    # Initialize
     def __init__(self):
         super(Food, self).__init__()
         self.surf = pygame.Surface((25, 25))
@@ -66,10 +70,6 @@ class Food(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(
             center = (random.randint(0, screen_width),
                       random.randint(0, screen_height)))
-
-    def update(self):
-        if self.rect.colliderect(snake):
-            self.kill()
 
 # Screen dimensions
 screen_width = 500
@@ -131,8 +131,11 @@ while running:
     # Fill the screen with black
     screen.fill((0, 0, 0))
 
-    # Get snake constant movement
-    snake.constant_move(x_direction, y_direction)
+    # Get snake constant movement and get new position
+    new_position = snake.constant_move(x_direction, y_direction)
+    if position_list != []:
+        if new_position == position_list[-1]:
+            new_position = None
 
     # Check for collisions
     if pygame.sprite.spritecollideany(snake, foods):
@@ -149,9 +152,11 @@ while running:
             body.add(snake_body)
 
     # Append head location to position list
-    position_list.append(snake.rect)
-    if len(position_list) >= 100:
-        position_list = position_list[-100:]
+    if new_position is not None:
+        position_list = position_list + [new_position]
+    #if len(position_list) >= 100:
+    #    position_list = position_list[-100:]
+    print(position_list)
 
     # Body
 
@@ -159,7 +164,7 @@ while running:
     # Draw snake
     screen.blit(snake.surf, snake.rect)
     for item in body:
-        screen.blit(item.surf, position_list[0])
+        screen.blit(item.surf, position_list[-10])
 
     # Draw food
     for item in foods:
