@@ -7,13 +7,18 @@
 # 4/15: 1 hr getting food collision and appearance to work
 # 4/15: 1 hr attempting snake addition
 # 4/16: 30 in gathertown and working on snake body addition
-# 4/16 1 hr still working on snake body addition
+# 4/16: 1 hr still working on snake body addition
+# 4/17: 30 min calculating and displaying score
+
+# IMPORTS ##############################
 
 import pygame
 import random
 
 # Import for ability to use keyboard keys
 from pygame.locals import *
+
+# SET-UP (CLASSES AND VARIABLES) ##############################
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
@@ -101,10 +106,14 @@ y_direction = 0
 # Initialize position list
 position_list = []
 
+# Initialize score variable
+score = 0
+
 # Variable to keep the main loop running
 running = True
 
-# Main loop
+# MAIN LOOP ##############################
+
 while running:
     # Quit if snake is off screen
     if not snake.on_screen():
@@ -143,6 +152,9 @@ while running:
             # Remove food
             foods.remove(item)
 
+            # Increase score by one
+            score += 1
+
             # Add new food
             new_food = Food()
             foods.add(new_food)
@@ -163,8 +175,8 @@ while running:
 
     # Draw snake
     screen.blit(snake.surf, snake.rect)
-    for item in body:
-        screen.blit(item.surf, position_list[-10])
+    #for item in body:
+        #screen.blit(item.surf, position_list[-10])
 
     # Draw food
     for item in foods:
@@ -176,10 +188,28 @@ while running:
     # Update display
     pygame.display.flip()
 
-# End screen
+# END SCREEN ##############################
+
+# Set-up font
+font = pygame.font.SysFont(None, 24)
+
+# Make score into string
+string_score = "Score = " + str(score)
+
+# End screen loop
 end = False
 while not end:
-    screen.fill((0, 255, 0))
+    # Fill screen grey
+    screen.fill((200, 200, 200))
+
+    # Define and display text
+    text = font.render(string_score, True, (255, 0, 0))
+    screen.blit(text, (screen_width/2 - (text.get_rect().width)/2,
+                      screen_height/2 - (text.get_rect().height)/2))
+
+    # Update display
     pygame.display.flip()
+
+    # Wait 3 seconds then end
     pygame.time.delay(3000)
     end = True
