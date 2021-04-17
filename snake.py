@@ -11,11 +11,13 @@
 # 4/17: 30 min calculating and displaying score
 # 4/17: 2 hrs SNAKE BODY WORKING WOOHOO (thanks Abby on gathertown); tyring to get collisions to work
 # 4/17: 30 min snake body collision is working decently
+# 4/17: 30 min starting to get different snake skins
 
 # IMPORTS ##############################
 
 import pygame
 import random
+import os
 
 # Import for ability to use keyboard keys
 from pygame.locals import *
@@ -27,8 +29,8 @@ class Snake(pygame.sprite.Sprite):
     # Initialize
     def __init__(self):
         super(Snake, self).__init__()
-        self.surf = pygame.Surface((25, 25))
-        self.surf.fill((255, 255, 255))
+        self.surf = pygame.image.load(os.path.join('images', 'green.jpg'))
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect()
 
     # Define constant moving function
