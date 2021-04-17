@@ -13,6 +13,7 @@
 # 4/17: 30 min snake body collision is working decently
 # 4/17: 30 min starting to get different snake skins
 # 4/17: 1 hr more work on skins and opening screen
+# 4/17: 30 min finished skin
 
 # IMPORTS ##############################
 
@@ -119,9 +120,13 @@ while open_running_skin:
     screen.fill((0, 0, 0))
 
     # Display text
-    text = font.render('Press num', True, (255, 0, 0))
-    screen.blit(text, (screen_width/2 - (text.get_rect().width)/2,
-                      screen_height/2 - (text.get_rect().height)/2))
+    text = font.render('Press number to choose snake skin', True, (255, 255, 255))
+    screen.blit(text, (screen_width / 2 - text.get_rect().width / 2,
+                       screen_height / 2 - text.get_rect().height / 2))
+
+    number_text = font.render('1 - green, 2 - coral, 3 - rattle, 4 - eel', True, (255, 255, 255))
+    screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
+                       screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
     # Event for loop
     for event in pygame.event.get():
