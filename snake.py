@@ -14,6 +14,7 @@
 # 4/17: 30 min starting to get different snake skins
 # 4/17: 1 hr more work on skins and opening screen
 # 4/17: 30 min finished skin
+# 4/17: 2 hrs getting background options, corresponding foods, etc.
 
 # IMPORTS ##############################
 
@@ -25,9 +26,20 @@ import os
 from pygame.locals import *
 
 # END IMPORTS ##############################
+############################################
 
 
 # DEFINE CLASSES ##############################
+
+# Class for background
+class Background(pygame.sprite.Sprite):
+    # Initialize
+    def __init__(self):
+        super(Background, self).__init__()
+        self.surf = pygame.image.load(os.path.join('images', background))
+        self.rect = self.surf.get_rect()
+        self.rect.left, self.rect.top = (0, 0)
+
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
@@ -82,13 +94,14 @@ class Food(pygame.sprite.Sprite):
     # Initialize
     def __init__(self):
         super(Food, self).__init__()
-        self.surf = pygame.Surface((25, 25))
-        self.surf.fill((0, 255, 255))
+        self.surf = pygame.image.load(os.path.join('images', food_img))
+        self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
-            center = (random.randint(0, screen_width),
-                      random.randint(0, screen_height)))
+            center = (random.randint(25, screen_width - 25),
+                      random.randint(25, screen_height - 25)))
 
 # END DEFINE CLASSES ##############################
+###################################################
 
 
 # SET-UP DISPLAY ##############################
@@ -104,14 +117,15 @@ screen_height = 500
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Set-up font
-font = pygame.font.SysFont(None, 24)
+font = pygame.font.SysFont("comicsansms", 24)
 
 # END SET-UP DISPLAY ##############################
+###################################################
 
 
 # OPENING SCREEN ##############################
 
-# Variable to keep opening screen running
+# Variable to keep opening skin screen running
 open_running_skin = True
 
 # Opening loop skin
@@ -162,7 +176,63 @@ while open_running_skin:
     # Update display
     pygame.display.flip()
 
+# Variable to keep opening background screen running
+open_running_bg = True
+
+# Opening loop background
+while open_running_bg:
+    # Fill the screen with black
+    screen.fill((0, 0, 0))
+
+    # Display text
+    text = font.render('Press number to choose background', True, (255, 255, 255))
+    screen.blit(text, (screen_width / 2 - text.get_rect().width / 2,
+                       screen_height / 2 - text.get_rect().height / 2))
+
+    number_text = font.render('1 - dirt, 2 - grass, 3 - water', True, (255, 255, 255))
+    screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
+                       screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == K_1:
+                background = 'dirt.jpeg'
+                food_img = 'apple.png'
+                open_running_bg = False
+
+            if event.key == K_2:
+                background = 'grass.jpeg'
+                food_img = 'bug.png'
+                open_running_bg = False
+
+            if event.key == K_3:
+                background = 'water.jpeg'
+                food_img = 'fish.png'
+                open_running_bg = False
+
+            # Check for ESC key press
+            if event.key == K_ESCAPE:
+                open_running_bg = False
+
+        # Check for QUIT event
+        elif event.type == QUIT:
+            open_running_bg = False
+
+    # Update display
+    pygame.display.flip()
+
 # END OPENING SCREEN ##############################
+###################################################
+
+# SET-UP MAIN LOOP ##############################
+
+# Create background
+bg = Background()
 
 # Create snake
 snake = Snake()
@@ -189,6 +259,10 @@ score = 0
 
 # Variable to keep the main loop running
 running = True
+
+# END SET-UP MAIN LOOP ##############################
+#####################################################
+
 
 # MAIN LOOP ##############################
 
@@ -217,6 +291,7 @@ while running:
 
     # Fill the screen with black
     screen.fill((0, 0, 0))
+    screen.blit(bg.surf, bg.rect)
 
     # Get snake constant movement and get new position
     moved_position = snake.constant_move(x_direction, y_direction)
@@ -278,21 +353,29 @@ while running:
     # Update display
     pygame.display.flip()
 
-# END SCREEN ##############################
+# END MAIN LOOP ##############################
+##############################################
+
+
+# FINAL SCREEN ##############################
 
 # Make score into string
-string_score = "Score = " + str(score)
+string_score = "Score: " + str(score)
 
 # End screen loop
 end = False
 while not end:
     # Fill screen grey
-    screen.fill((200, 200, 200))
+    screen.fill((0, 0, 0))
 
     # Define and display text
-    text = font.render(string_score, True, (255, 0, 0))
+    text = font.render('GAME OVER', True, (255, 0, 0))
     screen.blit(text, (screen_width/2 - (text.get_rect().width)/2,
                       screen_height/2 - (text.get_rect().height)/2))
+
+    number_text = font.render(string_score, True, (255, 0, 0))
+    screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
+                              screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
     # Update display
     pygame.display.flip()
@@ -300,3 +383,6 @@ while not end:
     # Wait 3 seconds then end
     pygame.time.delay(3000)
     end = True
+
+# END FINAL SCREEN ##############################
+#################################################
