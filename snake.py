@@ -10,6 +10,7 @@
 # 4/16: 1 hr still working on snake body addition
 # 4/17: 30 min calculating and displaying score
 # 4/17: 2 hrs SNAKE BODY WORKING WOOHOO (thanks Abby on gathertown); tyring to get collisions to work
+# 4/17: 30 min snake body collision is working decently
 
 # IMPORTS ##############################
 
@@ -152,8 +153,8 @@ while running:
         position_list.append((moved_position[0], moved_position[1]))
 
     # Keep position list at max length 100
-    if len(position_list) >= 100:
-        position_list = position_list[-100:]
+    if len(position_list) >= 1000:
+        position_list = position_list[-1000:]
 
     # Check for food collisions
     if pygame.sprite.spritecollideany(snake, foods):
@@ -172,22 +173,26 @@ while running:
             snake_body = Snake()
             body.add(snake_body)
 
-    # Check for snake body collisions
-    if pygame.sprite.spritecollideany(snake, body):
-        running = False
-        print('noooo')
-
-    for item in body:
-        print(item.rect)
-
     # Draw snake head
     screen.blit(snake.surf, snake.rect)
 
-    # Draw snake body
+    # Draw snake body and check for collision with head
     i = 1
     for item in body:
+        # Draw snake body
         screen.blit(item.surf, position_list[-6*i - 1])
-        print((position_list[-6*i - 1][0], position_list[-6*i - 1][1]))
+
+        # Collision detection
+        x_pos = position_list[-6*i - 1][0]
+        y_pos = position_list[-6*i - 1][1]
+        head_x = position_list[-1][0]
+        head_y = position_list[-1][1]
+        for z in range(7, 18):
+            if ((head_x + z) in list(range(x_pos + 7, x_pos + 18))) and \
+                    ((head_y + z) in list(range(y_pos + 7, y_pos + 18))):
+                running = False
+
+        # Update i
         i += 1
 
     # Draw food
