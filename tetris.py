@@ -17,7 +17,8 @@ top_left_y = blockW - blockH
 #i switched my approch and redesigned the grid. time = 2.5 hour(s)
 #April 8 - checked if the shapes touched and line break. time = 1 hour(s)
 #April 9 - game over. time = 1 hour(s)
-
+#April 15 - start initilize. time = .5 hour(s)
+#April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting
 
 
 #class for Piece. time = 15 minutes
@@ -154,6 +155,9 @@ class Tetris:
     y = 60
     shapesPresent = None
     figure = None
+    score = 0
+    level = 2
+    zoom = 20
 
     def __init__(self, height, width):
         self.height = HEIGHT
@@ -166,7 +170,7 @@ class Tetris:
             self.grid.append(new_line)
 
     def startSpot(self):
-        self.figure = Figure(top_left_x, 0)
+        self.figure = Pieces(top_left_x, 0)
 
     def breakL():
         numLines = 0
@@ -211,7 +215,7 @@ class Tetris:
         self.breakL()
         self.startSpot()
         if self.isTouching():
-            game.state = "gameover"
+            game.status = "gameover"
 
     #### all movement functions########
     def down(self):
@@ -222,6 +226,7 @@ class Tetris:
 
     #complete - left, right
 
+
 pygame.init()
 
 size = (400, 500)
@@ -231,7 +236,74 @@ pygame.display.set_caption("Tetris")
 
 # Loop until the user clicks the close button.
 go = False
+down = False
 clock = pygame.time.Clock()
 game = Tetris(50, 40)
 counter = 0
+
+while not go:
+    if game.figure is None:
+        game.startSpot()
+    counter += 1
+    if counter > 100000:
+        counter = 0
+
+    if counter % (25 // game.level // 2) == 0 or down:
+        if game.state == "play":
+            game.down()
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            go = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                game.rotate()
+            if event.key == pygame.K_DOWN:
+                down = True
+            if event.key == pygame.K_LEFT:
+                game.go_side(-1)
+            if event.key == pygame.K_RIGHT:
+                game.go_side(1)
+            if event.key == pygame.K_SPACE:
+                game.go_space()
+            if event.key == pygame.K_ESCAPE:
+                game.__init__(20, 10)
+
+    if event.type == pygame.KEYUP:
+            if event.key == pygame.K_DOWN:
+                down = False
+
+    screen.fill((255, 255, 255))
+
+    for i in range(game.height):
+        for j in range(game.width):
+            pygame.draw.rect(screen, (128, 128, 128), [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
+            if game.field[i][j] > 0:
+                pygame.draw.rect(screen, colors[game.field[i][j]],
+                                 [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
+
+    if game.figure is not None:
+        for i in range(4):
+            for j in range(4):
+                temp = i * 4 + j
+                if temp in game.figure.image():
+                    pygame.draw.rect(screen, colors[game.figure.color],
+                                     [game.x + game.zoom * (j + game.figure.x) + 1,
+                                      game.y + game.zoom * (i + game.figure.y) + 1,
+                                      game.zoom - 2, game.zoom - 2])
+
+    font = pygame.font.SysFont('timesnewroman', 25, True, False)
+    font1 = pygame.font.SysFont('timesnewroman', 65, True, False)
+    text = font.render("Score: " + str(game.score), True, (0, 0, 0))
+    gameEnd = font1.render("Game Over", True, (0, 0, 55))
+    gameEscape = font1.render("Press ESC", True, (0, 0, 55))
+
+    screen.blit(text, [0, 0])
+    if game.status == "gameover":
+        screen.blit(gameEnd, [20, 200])
+        screen.blit(gameEscape, [25, 265])
+
+    pygame.display.flip()
+    clock.tick(25)
+
+pygame.quit()
 
