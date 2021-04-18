@@ -1,5 +1,5 @@
 # 4/6: 20 min reading manuals and beginning setup
-        #Getting started: https://realpython.com/pygame-a-primer/
+# Getting started: https://realpython.com/pygame-a-primer/
 # 4/6: 2 hr creating a sprite and getting movement
 # 4/9: 1 hr getting constant movement and ending game for hit edge
 # 4/10: 20 min playing around with end game screen
@@ -16,6 +16,7 @@
 # 4/17: 30 min finished skin
 # 4/17: 2 hrs getting background options, corresponding foods, etc.
 # 4/17: 1 hr how-to screen, fix esc and quit, incorporate high score
+# 4/18: 1 hr 30 min sound incorporation
 
 # IMPORTS ##############################
 
@@ -31,7 +32,8 @@ from pygame.locals import *
 
 
 # FIND HIGH SCORE ##############################
-snake_high_score = 0 #change this to dictionary snake_high_score later
+snake_high_score = 0  # change this to dictionary snake_high_score later
+
 
 # END FIND HIGH SCORE ##############################
 ####################################################
@@ -47,6 +49,7 @@ class Background(pygame.sprite.Sprite):
         self.surf = pygame.image.load(os.path.join('images', background))
         self.rect = self.surf.get_rect()
         self.rect.left, self.rect.top = (0, 0)
+
 
 # Class for snake
 class Snake(pygame.sprite.Sprite):
@@ -96,6 +99,7 @@ class Snake(pygame.sprite.Sprite):
             truth = False
         return truth
 
+
 # Class for food
 class Food(pygame.sprite.Sprite):
     # Initialize
@@ -104,14 +108,18 @@ class Food(pygame.sprite.Sprite):
         self.surf = pygame.image.load(os.path.join('images', food_img))
         self.surf.set_colorkey((255, 255, 255), RLEACCEL)
         self.rect = self.surf.get_rect(
-            center = (random.randint(25, screen_width - 25),
-                      random.randint(25, screen_height - 25)))
+            center=(random.randint(25, screen_width - 25),
+                    random.randint(25, screen_height - 25)))
+
 
 # END DEFINE CLASSES ##############################
 ###################################################
 
 
 # SET-UP DISPLAY ##############################
+
+# Initialize sounds
+pygame.mixer.init()
 
 # Initialize
 pygame.init()
@@ -125,6 +133,14 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 # Set-up font
 font = pygame.font.SysFont("comicsansms", 24)
+
+# Set-up sound
+# https://freesound.org/people/Kodack/sounds/258020/
+food_sound = pygame.mixer.Sound(os.path.join('sounds', 'food.wav'))
+# https://freesound.org/people/myfox14/sounds/382310/
+collide_sound = pygame.mixer.Sound(os.path.join('sounds', 'collide.wav'))
+# https://freesound.org/people/ProjectsU012/sounds/341695/
+button_sound = pygame.mixer.Sound(os.path.join('sounds', 'button.wav'))
 
 # Variable to keep opening skin screen running
 open_running_skin = True
@@ -156,7 +172,7 @@ while open_running_skin:
 
     number_text = font.render('1 - green, 2 - coral, 3 - rattle, 4 - eel', True, (255, 255, 255))
     screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
-                       screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
+                              screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
     # Event for loop
     for event in pygame.event.get():
@@ -168,18 +184,22 @@ while open_running_skin:
             if event.key == K_1:
                 snake_skin = 'green.jpg'
                 open_running_skin = False
+                button_sound.play()
 
             if event.key == K_2:
                 snake_skin = 'coral.png'
                 open_running_skin = False
+                button_sound.play()
 
             if event.key == K_3:
                 snake_skin = 'rattle.png'
                 open_running_skin = False
+                button_sound.play()
 
             if event.key == K_4:
                 snake_skin = 'eel.jpeg'
                 open_running_skin = False
+                button_sound.play()
 
             # Check for ESC key press
             if event.key == K_ESCAPE:
@@ -216,7 +236,7 @@ while open_running_bg:
 
     number_text = font.render('1 - dirt, 2 - grass, 3 - water', True, (255, 255, 255))
     screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
-                       screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
+                              screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
     # Event for loop
     for event in pygame.event.get():
@@ -229,16 +249,19 @@ while open_running_bg:
                 background = 'dirt.jpeg'
                 food_img = 'apple.png'
                 open_running_bg = False
+                button_sound.play()
 
             if event.key == K_2:
                 background = 'grass.jpeg'
                 food_img = 'bug.png'
                 open_running_bg = False
+                button_sound.play()
 
             if event.key == K_3:
                 background = 'water.jpeg'
                 food_img = 'fish.png'
                 open_running_bg = False
+                button_sound.play()
 
             # Check for ESC key press
             if event.key == K_ESCAPE:
@@ -267,19 +290,19 @@ while open_running_how_to:
     # Display text
     t1 = font.render('HOW TO PLAY', True, (255, 255, 255))
     screen.blit(t1, (screen_width / 2 - t1.get_rect().width / 2,
-                               screen_height / 2 - 2 * t1.get_rect().height))
+                     screen_height / 2 - 2 * t1.get_rect().height))
 
     t2 = font.render('- use keyboard arrows to move snake', True, (255, 255, 255))
     screen.blit(t2, (screen_width / 2 - t2.get_rect().width / 2,
-                            screen_height / 2 - 2 * t2.get_rect().height + t1.get_rect().height))
+                     screen_height / 2 - 2 * t2.get_rect().height + t1.get_rect().height))
 
     t3 = font.render('- collect food but do not hit self or edge', True, (255, 255, 255))
     screen.blit(t3, (screen_width / 2 - t3.get_rect().width / 2,
-                            screen_height / 2 - 2 * t3.get_rect().height + 2 * t1.get_rect().height))
+                     screen_height / 2 - 2 * t3.get_rect().height + 2 * t1.get_rect().height))
 
     t4 = font.render('PRESS SPACEBAR TO BEGIN', True, (255, 255, 255))
     screen.blit(t4, (screen_width / 2 - t4.get_rect().width / 2,
-                            screen_height / 2 - 2 * t4.get_rect().height + 4 * t1.get_rect().height))
+                     screen_height / 2 - 2 * t4.get_rect().height + 4 * t1.get_rect().height))
 
     # Event for loop
     for event in pygame.event.get():
@@ -290,6 +313,7 @@ while open_running_how_to:
             # Check what key is pressed
             if event.key == K_SPACE:
                 open_running_how_to = False
+                button_sound.play()
 
             # Check for ESC key press
             if event.key == K_ESCAPE:
@@ -345,6 +369,7 @@ while running:
     # Quit if snake is off screen
     if not snake.on_screen():
         running = False
+        collide_sound.play()
 
     # Event for loop
     for event in pygame.event.get():
@@ -387,6 +412,7 @@ while running:
 
             # Increase score by one
             snake_score += 1
+            food_sound.play()
 
             # Add new food
             new_food = Food()
@@ -403,17 +429,18 @@ while running:
     i = 1
     for item in body:
         # Draw snake body
-        screen.blit(item.surf, position_list[-5*i - 1])
+        screen.blit(item.surf, position_list[-5 * i - 1])
 
         # Collision detection
-        x_pos = position_list[-5*i - 1][0]
-        y_pos = position_list[-5*i - 1][1]
+        x_pos = position_list[-5 * i - 1][0]
+        y_pos = position_list[-5 * i - 1][1]
         head_x = position_list[-1][0]
         head_y = position_list[-1][1]
         for z in range(7, 18):
             if ((head_x + z) in list(range(x_pos + 7, x_pos + 18))) and \
                     ((head_y + z) in list(range(y_pos + 7, y_pos + 18))):
                 running = False
+                collide_sound.play()
 
         # Update i
         i += 1
@@ -434,6 +461,7 @@ while running:
 
 # FINAL SCREEN ##############################
 
+# New high score if player beats current high score
 if snake_score > snake_high_score:
     snake_high_score = snake_score
 
@@ -441,7 +469,7 @@ if snake_score > snake_high_score:
 string_score = "Score: " + str(snake_score)
 
 # Make high score into string
-string_hs = "High score: " + str(snake_high_score)
+string_hs = "High Score: " + str(snake_high_score)
 
 # End screen loop
 end = False
@@ -451,8 +479,8 @@ while not end:
 
     # Define and display text
     text = font.render('GAME OVER', True, (255, 0, 0))
-    screen.blit(text, (screen_width/2 - (text.get_rect().width)/2,
-                      screen_height/2 - (text.get_rect().height)/2))
+    screen.blit(text, (screen_width / 2 - (text.get_rect().width) / 2,
+                       screen_height / 2 - (text.get_rect().height) / 2))
 
     number_text = font.render(string_score, True, (255, 0, 0))
     screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
@@ -460,7 +488,7 @@ while not end:
 
     hs_text = font.render(string_hs, True, (255, 0, 0))
     screen.blit(hs_text, (screen_width / 2 - hs_text.get_rect().width / 2,
-                              screen_height / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
+                          screen_height / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
 
     # Update display
     pygame.display.flip()
