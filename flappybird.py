@@ -6,6 +6,7 @@
 # 4/16: (3.5 hrs): Collision detection
 # 4/16: (2 hrs): End/restart game and score/high score
 # 4/18: (1.5 hrs): Trying to troubleshoot esc + quit w/ arcade
+# 4/18: (15 min): fixing esc
 
 import pygame
 import random
@@ -15,17 +16,18 @@ pygame.init()
 screen = pygame.display.set_mode((432, 768))
 clock = pygame.time.Clock()
 game_font = pygame.font.SysFont("chalkboard", 40)
+end_font = pygame.font.SysFont("chalkboard", 20)
 
 
 # Game variables
 gravity = 0.18  # Makes bird drop
 bird_movement = 0  # Makes bird fly
 game_running = True  # Variable to make entire game loop run
-flappy_bird = True  # Variabale to make flappy bird loop to run --> allows player to replay game
+end = False  # Variable to make end loop to run --> allows player to return to arcade
 score = 0
 high_score = 0
 
-# Score/High score
+# Score/High score/End prompt
 def display_score(game):
     if game == 'main':
         score_surface = game_font.render(str(int(score)), True, (255, 255, 255))
@@ -39,6 +41,11 @@ def display_score(game):
         high_score_surface = game_font.render(f'High Score: {int(high_score)}', True, (255, 255, 255))
         high_score_rect = high_score_surface.get_rect(center=(216, 125))
         screen.blit(high_score_surface, high_score_rect)
+
+        end_prompt_surface = end_font.render('Press escape to go back to arcade', True, (255, 255, 255))
+        end_prompt_rect = end_prompt_surface.get_rect(center=(216, 425))
+        screen.blit(end_prompt_surface, end_prompt_rect)
+
 
 def new_record(score, high_score):
     if score > high_score:
@@ -121,13 +128,13 @@ while True:
         # Force quit game
         if event.type == pygame.QUIT:
             pygame.quit()
-            flappy_bird = False
+            game_running = False
         # Key press
         if event.type == pygame.KEYDOWN:
             # Key press to quit game
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
-                flappy_bird = False
+                game_running = False
             # Key press for bird movement
             if event.key == pygame.K_SPACE and game_running:
                 bird_movement = 0
@@ -145,7 +152,6 @@ while True:
             pipe_list.extend(create_pipe())
 
     # background
-    screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
     # only display bird/pipes/score if game is running
