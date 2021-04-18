@@ -17,6 +17,7 @@
 # 4/17: 2 hrs getting background options, corresponding foods, etc.
 # 4/17: 1 hr how-to screen, fix esc and quit, incorporate high score
 # 4/18: 1 hr 30 min sound incorporation
+# 4/18: 30 min playing and fixing wrong key bug
 
 # IMPORTS ##############################
 
@@ -379,7 +380,9 @@ while running:
 
             # Change direction according to key pressed
             key_pressed = pygame.key.get_pressed()
-            x_direction, y_direction = snake.move(key_pressed)
+            if key_pressed[pygame.K_UP] or key_pressed[pygame.K_DOWN] \
+                    or key_pressed[pygame.K_RIGHT] or key_pressed[pygame.K_LEFT]:
+                x_direction, y_direction = snake.move(key_pressed)
 
             # Check for ESC key press
             if event.key == K_ESCAPE:
