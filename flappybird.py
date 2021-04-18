@@ -8,6 +8,7 @@
 # 4/18: (1.5 hrs): Trying to troubleshoot esc + quit w/ arcade
 # 4/18: (15 min): fixing esc
 # 4/18: (30 min): FIXED THE ESCAPE BUTTON
+# 4/18: (2 hrs): Loaded different birds and background
 
 import pygame
 import random
@@ -17,40 +18,65 @@ pygame.init()
 screen = pygame.display.set_mode((432, 768))
 clock = pygame.time.Clock()
 game_font = pygame.font.SysFont("chalkboard", 40)
-end_font = pygame.font.SysFont("chalkboard", 20)
+prompt_font = pygame.font.SysFont("chalkboard", 20)
 
 
 # Game variables
 gravity = 0.18  # Makes bird drop
 bird_movement = 0  # Makes bird fly
 game_running = True  # Variable to make entire game loop run
+open_background = True  # Variable to keep opening background running
+open_bird = True  # Variable to keep opening bird running
+open_pipe = True  # Variable to keep opening pipe running
 score = 0
 high_score = 0
 
+'''
+# Start Screen
+def start():
+    # Intro
+    intro_surface = game_font.render('Get Ready'), True, (255, 255, 255))
+    intro_rect = intro_surface.get_rect(center=(216, 75))
+    screen.blit(intro_surface, intro_rect)
+'''
+
+#### SCORE/PROMPTS ####
 # Score/High score/End prompt
 def display_score(game):
+
     if game == 'main':
+        # Score
         score_surface = game_font.render(str(int(score)), True, (255, 255, 255))
         score_rect = score_surface.get_rect(center=(216, 75))
         screen.blit(score_surface, score_rect)
+
     if game == 'game_over':
+        #Score
         score_surface = game_font.render(f'Score: {int(score)}', True, (255, 255, 255))
         score_rect = score_surface.get_rect(center=(216, 75))
         screen.blit(score_surface, score_rect)
 
+        #High Score
         high_score_surface = game_font.render(f'High Score: {int(high_score)}', True, (255, 255, 255))
         high_score_rect = high_score_surface.get_rect(center=(216, 125))
         screen.blit(high_score_surface, high_score_rect)
 
-        end_prompt_surface = end_font.render('Press escape to go back to arcade', True, (255, 255, 255))
+        #Escape to arcade
+        end_prompt_surface = prompt_font.render('Press escape to go back to arcade', True, (255, 255, 255))
         end_prompt_rect = end_prompt_surface.get_rect(center=(216, 425))
         screen.blit(end_prompt_surface, end_prompt_rect)
 
+        #Replay Game
+        replay_surface = prompt_font.render('Press return to replay', True, (255, 255, 255))
+        replay_rect = replay_surface.get_rect(center=(216, 375))
+        screen.blit(replay_surface, replay_rect)
 
+# Save + update High Score
 def new_record(score, high_score):
     if score > high_score:
         high_score = score
     return high_score
+
 
 #### BACKGROUND ####
 
@@ -62,21 +88,23 @@ floor = pygame.image.load('images/fb.images/base.png').convert()
 floor = pygame.transform.scale(floor, (432, 150))
 floor_x_pos = 0
 
-
+# Floor
 def draw_floor():
     screen.blit(floor, (floor_x_pos, 650))
     screen.blit(floor, (floor_x_pos + 432, 650))
 
-
+'''
 #### BIRD ####
+# Yellow bird
 bird = pygame.image.load('images/fb.images/yellowbird-midflap.png').convert_alpha()
 bird = pygame.transform.scale(bird, (45, 45))
 bird_rect = bird.get_rect(center=(100, 384))
-
+'''
 # Bird rotation
 def rotate_bird(bird):
     new_bird = pygame.transform.rotozoom(bird, -bird_movement * 2, 1)
     return new_bird
+
 
 #### PIPES ####
 pipe_surface = pygame.image.load('images/fb.images/pipe-green.png').convert()
@@ -87,18 +115,17 @@ pygame.time.set_timer(SPAWNPIPE, 1200)
 pipe_height = [300, 400, 500]
 
 
+
 def create_pipe():
     random_pipe_pos = random.choice(pipe_height)
     bottom_pipe = pipe_surface.get_rect(midtop=(600, random_pipe_pos))
     top_pipe = pipe_surface.get_rect(midbottom=(600, random_pipe_pos - 250))
     return bottom_pipe, top_pipe
 
-
 def move_pipes(pipes):
     for pipe in pipes:
         pipe.centerx -= 5
     return pipes
-
 
 def draw_pipes(pipes):
     for pipe in pipes:
@@ -121,8 +148,189 @@ def check_collision(pipes):
         return False
     return True
 
-flappy_bird = True
+#### Opening Background Loop ####
+while open_background:
+    # Initial Background
+    screen.blit(background, (0, 0))
+    floor = pygame.image.load('images/fb.images/base.png').convert()
+    floor = pygame.transform.scale(floor, (432, 150))
+    draw_floor()
+
+    # Display text
+    text = prompt_font.render('Press number to choose background', True, (255, 255, 255))
+    text_rect = text.get_rect(center=(216, 75))
+    screen.blit(text, text_rect)
+
+    number_text = prompt_font.render('1 - day, 2 - night', True, (255, 255, 255))
+    number_text_rect = text.get_rect(center=(216, 125))
+    screen.blit(number_text, number_text_rect)
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == pygame.KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == pygame.K_1:
+                # Day background
+                background = pygame.image.load('images/fb.images/background-day.png').convert()
+                background = pygame.transform.scale(background, (432, 768))
+                open_background = False
+                # button_sound.play()
+
+            if event.key == pygame.K_2:
+                # Red Pipe
+                background = pygame.image.load('images/fb.images/background-night.png').convert()
+                background = pygame.transform.scale(background, (432, 768))
+                open_background = False
+                # button_sound.play()
+
+
+            # Check for ESC key press
+            if event.key == pygame.K_ESCAPE:
+                open_background = False
+                open_bird = False
+                open_pipe = False
+                game_running = False
+
+        # Check for QUIT event
+        if event.type == pygame.QUIT:
+            open_background = False
+            open_bird = False
+            open_pipe = False
+            game_running = False
+
+    # Update display
+    pygame.display.flip()
+
+
+#### Opening Bird Loop ####
+while open_bird:
+    # Background
+    screen.blit(background, (0, 0))
+    floor = pygame.image.load('images/fb.images/base.png').convert()
+    floor = pygame.transform.scale(floor, (432, 150))
+    draw_floor()
+
+    # Display text
+    text = prompt_font.render('Press number to choose bird', True, (255, 255, 255))
+    text_rect = text.get_rect(center=(216, 75))
+    screen.blit(text, text_rect)
+
+    number_text = prompt_font.render('1 - yellow, 2 - blue, 3 - red', True, (255, 255, 255))
+    number_text_rect = text.get_rect(center=(216, 125))
+    screen.blit(number_text, number_text_rect)
+
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == pygame.KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == pygame.K_1:
+                # Yellow bird
+                bird = pygame.image.load('images/fb.images/yellowbird-midflap.png').convert_alpha()
+                bird = pygame.transform.scale(bird, (45, 45))
+                bird_rect = bird.get_rect(center=(100, 384))
+                open_bird = False
+                # button_sound.play()
+
+            if event.key == pygame.K_2:
+                # Blue Bird
+                bird = pygame.image.load('images/fb.images/bluebird-midflap.png').convert_alpha()
+                bird = pygame.transform.scale(bird, (45, 45))
+                bird_rect = bird.get_rect(center=(100, 384))
+                open_bird = False
+                # button_sound.play()
+
+            if event.key == pygame.K_3:
+                bird = pygame.image.load('images/fb.images/redbird-midflap.png').convert_alpha()
+                bird = pygame.transform.scale(bird, (45, 45))
+                bird_rect = bird.get_rect(center=(100, 384))
+                open_bird = False
+                #button_sound.play()
+
+            # Check for ESC key press
+            if event.key == pygame.K_ESCAPE:
+                open_background = False
+                open_bird = False
+                open_pipe = False
+                game_running = False
+
+        # Check for QUIT event
+        if event.type == pygame.QUIT:
+            open_background = False
+            open_bird = False
+            open_pipe = False
+            game_running = False
+
+    # Update display
+    pygame.display.flip()
+
+
+#### Opening Pipe Loop ####
+while open_pipe:
+    # Background
+    screen.blit(background, (0, 0))
+    floor = pygame.image.load('images/fb.images/base.png').convert()
+    floor = pygame.transform.scale(floor, (432, 150))
+    draw_floor()
+
+    # Display text
+    text = prompt_font.render('Press number to choose pipe color', True, (255, 255, 255))
+    text_rect = text.get_rect(center=(216, 75))
+    screen.blit(text, text_rect)
+
+    number_text = prompt_font.render('1 - green, 2 - red', True, (255, 255, 255))
+    number_text_rect = text.get_rect(center=(216, 125))
+    screen.blit(number_text, number_text_rect)
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == pygame.KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == pygame.K_1:
+                # Green Pipe
+                pipe_surface = pygame.image.load('images/fb.images/pipe-green.png').convert()
+                pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
+                open_pipe = False
+                # button_sound.play()
+
+            if event.key == pygame.K_2:
+                # Red Pipe
+                pipe_surface = pygame.image.load('images/fb.images/pipe-red.png').convert()
+                pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
+                open_pipe = False
+                # button_sound.play()
+
+
+            # Check for ESC key press
+            if event.key == pygame.K_ESCAPE:
+                open_background = False
+                open_bird = False
+                open_pipe = False
+                game_running = False
+
+        # Check for QUIT event
+        if event.type == pygame.QUIT:
+            open_background = False
+            open_bird = False
+            open_pipe = False
+            game_running = False
+
+    # Update display
+    pygame.display.flip()
+
+
+
 #### Game Loop ####
+flappy_bird = True
 while flappy_bird:
     for event in pygame.event.get():
         # Force quit game
