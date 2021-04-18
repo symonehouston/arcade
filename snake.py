@@ -18,6 +18,7 @@
 # 4/17: 1 hr how-to screen, fix esc and quit, incorporate high score
 # 4/18: 1 hr 30 min sound incorporation
 # 4/18: 30 min playing and fixing wrong key bug
+# 4/18: 30 min fixed fish image and added space bg option
 
 # IMPORTS ##############################
 
@@ -235,7 +236,7 @@ while open_running_bg:
     screen.blit(text, (screen_width / 2 - text.get_rect().width / 2,
                        screen_height / 2 - text.get_rect().height / 2))
 
-    number_text = font.render('1 - dirt, 2 - grass, 3 - water', True, (255, 255, 255))
+    number_text = font.render('1 - dirt, 2 - grass, 3 - water, 4 - space', True, (255, 255, 255))
     screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
                               screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
@@ -261,6 +262,12 @@ while open_running_bg:
             if event.key == K_3:
                 background = 'water.jpeg'
                 food_img = 'fish.png'
+                open_running_bg = False
+                button_sound.play()
+
+            if event.key == K_4:
+                background = 'space.jpeg'
+                food_img = 'star.png'
                 open_running_bg = False
                 button_sound.play()
 
