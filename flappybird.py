@@ -4,10 +4,10 @@
 #        Sprite: falls automatically and goes back up w/ user input
 #        obstacle: pipes are created and move across the screen
 # 4/16: (3.5 hrs): Collision detection
-# 4/16: (2 hrs) End/restart game and score/high score
+# 4/16: (2 hrs): End/restart game and score/high score
+# 4/18: (1.5 hrs): Trying to troubleshoot esc + quit w/ arcade
 
 import pygame
-import sys
 import random
 
 # Initialize pygame
@@ -18,9 +18,10 @@ game_font = pygame.font.SysFont("chalkboard", 40)
 
 
 # Game variables
-gravity = 0.18
-bird_movement = 0
-game_running = True
+gravity = 0.18  # Makes bird drop
+bird_movement = 0  # Makes bird fly
+game_running = True  # Variable to make entire game loop run
+flappy_bird = True  # Variabale to make flappy bird loop to run --> allows player to replay game
 score = 0
 high_score = 0
 
@@ -120,13 +121,13 @@ while True:
         # Force quit game
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()  # shuts down code
+            flappy_bird = False
         # Key press
         if event.type == pygame.KEYDOWN:
             # Key press to quit game
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
-                sys.exit()
+                flappy_bird = False
             # Key press for bird movement
             if event.key == pygame.K_SPACE and game_running:
                 bird_movement = 0
@@ -144,6 +145,7 @@ while True:
             pipe_list.extend(create_pipe())
 
     # background
+    screen.fill((0, 0, 0))
     screen.blit(background, (0, 0))
 
     # only display bird/pipes/score if game is running
@@ -172,7 +174,7 @@ while True:
         floor = pygame.image.load('images/fb.images/base.png').convert()
         floor = pygame.transform.scale(floor, (432, 150))
         draw_floor()
-        high_score = new_record(score,high_score)
+        high_score = new_record(score, high_score)
         display_score('game_over')
 
     pygame.display.update()

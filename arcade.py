@@ -77,8 +77,8 @@ while arcade_running:
                 arc_screen = pygame.display.set_mode((arc_screen_width, arc_screen_height))
 
             # Check for ESC key press
-            if event.key == K_ESCAPE:
-                arcade_running = False
+            #if event.key == K_BACKSPACE:
+               # arcade_running = False
 
         # Check for QUIT event
         elif event.type == QUIT:
