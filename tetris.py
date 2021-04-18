@@ -20,10 +20,7 @@ top_left_y = blockW - blockH
 #April 15 - start initilize. time = .5 hour(s)
 #April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting
 
-
-#class for Piece. time = 15 minutes
-class Pieces(object):
-    I = [['..0..',
+I = [['..0..',
       '..0..',
       '..0..',
       '..0..',
@@ -33,8 +30,7 @@ class Pieces(object):
       '.....',
       '.....',
       '.....']]
-
-    L = [['.....',
+L = [['.....',
       '...0.',
       '.000.',
       '.....',
@@ -55,7 +51,7 @@ class Pieces(object):
       '..0..',
       '.....']]
 
-    J = [['.....',
+J = [['.....',
       '.0...',
       '.000.',
       '.....',
@@ -76,13 +72,13 @@ class Pieces(object):
       '.00..',
       '.....']]
 
-    O = [['.....',
+O = [['.....',
       '.....',
       '.00..',
       '.00..',
       '.....']]
 
-    Z = [['.....',
+Z = [['.....',
       '.....',
       '.00..',
       '..00.',
@@ -93,7 +89,7 @@ class Pieces(object):
       '.0...',
       '.....']]
 
-    T = [['.....',
+T = [['.....',
       '..0..',
       '.000.',
       '.....',
@@ -114,7 +110,7 @@ class Pieces(object):
       '..0..',
       '.....']]
 
-    S = [['.....',
+S = [['.....',
       '..0..',
       '..00.',
       '...0.',
@@ -124,18 +120,21 @@ class Pieces(object):
       '..00..',
       '.00...',
       '......']]
-    #shapes list
-    shapes = [I,L,J,O,Z,T,S]
+#shapes list
+shapes = [I,L,J,O,Z,T,S]
 
-    #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
-    sColor = [(211,211,211), (0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
+#assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
+sColor = [(211,211,211), (0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
+
+#class for Piece. time = 15 minutes
+class Pieces(object):
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.shape = random.randint(0, len(self.shapes) - 1)
+        self.shape = random.randint(0, len(shapes) - 1) #changed it to just shapes !
         self.rotate = 0 #handles the case where you choose a different version of one shape
-        self.color = sColor[shapes.index(shape)]
+        self.color = random.randint(0, len(sColor) - 1)
 
     def rotation(self):
         #have to make sure the number does not go over length of the
@@ -238,7 +237,7 @@ pygame.display.set_caption("Tetris")
 go = False
 down = False
 clock = pygame.time.Clock()
-game = Tetris(50, 40)
+game = Tetris(20, 10)
 counter = 0
 
 while not go:
@@ -277,8 +276,8 @@ while not go:
     for i in range(game.height):
         for j in range(game.width):
             pygame.draw.rect(screen, (128, 128, 128), [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
-            if game.field[i][j] > 0:
-                pygame.draw.rect(screen, colors[game.field[i][j]],
+            if game.grid[i][j] > 0:
+                pygame.draw.rect(screen, sColor[game.grid[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
 
     if game.figure is not None:
