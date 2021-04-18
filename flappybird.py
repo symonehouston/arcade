@@ -7,6 +7,7 @@
 # 4/16: (2 hrs): End/restart game and score/high score
 # 4/18: (1.5 hrs): Trying to troubleshoot esc + quit w/ arcade
 # 4/18: (15 min): fixing esc
+# 4/18: (30 min): FIXED THE ESCAPE BUTTON
 
 import pygame
 import random
@@ -23,7 +24,6 @@ end_font = pygame.font.SysFont("chalkboard", 20)
 gravity = 0.18  # Makes bird drop
 bird_movement = 0  # Makes bird fly
 game_running = True  # Variable to make entire game loop run
-end = False  # Variable to make end loop to run --> allows player to return to arcade
 score = 0
 high_score = 0
 
@@ -121,20 +121,19 @@ def check_collision(pipes):
         return False
     return True
 
-
+flappy_bird = True
 #### Game Loop ####
-while True:
+while flappy_bird:
     for event in pygame.event.get():
         # Force quit game
         if event.type == pygame.QUIT:
-            pygame.quit()
-            game_running = False
+            flappy_bird = False
+
         # Key press
         if event.type == pygame.KEYDOWN:
             # Key press to quit game
             if event.key == pygame.K_ESCAPE:
-                pygame.quit()
-                game_running = False
+                flappy_bird = False
             # Key press for bird movement
             if event.key == pygame.K_SPACE and game_running:
                 bird_movement = 0
