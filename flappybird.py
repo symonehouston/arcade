@@ -11,6 +11,7 @@
 # 4/18: (2 hrs): Loaded different birds and background
 # 4/18: (15 min): Part of group programming; fixing variables to work with main game
 # 4/18: (10 min): Part of group programming; fixing variables to work with main game
+# 4/18: (): Trying to figure out time delays
 
 
 import pygame
@@ -34,16 +35,9 @@ open_bird = True  # Variable to keep opening bird running
 open_pipe = True  # Variable to keep opening pipe running
 flappybird_score = 0  # Game Score
 score_dict = pickle.load(open('score_dict.p', 'rb'))  # Score dictionary
-flappybird_high_score = score_dict['flappy_bird']  # High score
+flappybird_high_score = score_dict['flappybird']  # High score
 
-'''
-# Start Screen
-def start():
-    # Intro
-    intro_surface = game_font.render('Get Ready'), True, (255, 255, 255))
-    intro_rect = intro_surface.get_rect(center=(216, 75))
-    screen.blit(intro_surface, intro_rect)
-'''
+
 
 #### SCORE/PROMPTS ####
 # Score/High score/End prompt
@@ -98,13 +92,7 @@ def draw_floor():
     screen.blit(floor, (floor_x_pos, 650))
     screen.blit(floor, (floor_x_pos + 432, 650))
 
-'''
-#### BIRD ####
-# Yellow bird
-bird = pygame.image.load('images/fb.images/yellowbird-midflap.png').convert_alpha()
-bird = pygame.transform.scale(bird, (45, 45))
-bird_rect = bird.get_rect(center=(100, 384))
-'''
+
 # Bird rotation
 def rotate_bird(bird):
     new_bird = pygame.transform.rotozoom(bird, -bird_movement * 2, 1)
@@ -118,8 +106,6 @@ pipe_list = []
 SPAWNPIPE = pygame.USEREVENT
 pygame.time.set_timer(SPAWNPIPE, 1200)
 pipe_height = [300, 400, 500]
-
-
 
 def create_pipe():
     random_pipe_pos = random.choice(pipe_height)
@@ -336,7 +322,25 @@ while open_pipe:
 
 #### Game Loop ####
 flappy_bird = True
+N = 1
 while flappy_bird:
+    # background
+    screen.blit(background, (0, 0))
+    floor = pygame.image.load('images/fb.images/base.png').convert()
+    floor = pygame.transform.scale(floor, (432, 150))
+
+    '''
+    # pause
+    if N == 1:
+        text = game_font.render('Get Ready', True, (255, 255, 255))
+        text_rect = text.get_rect(center=(216, 200))
+        screen.blit(text, text_rect)
+        pygame.display.update()
+
+        pygame.time.delay(3000)
+        N += 1
+'''
+
     for event in pygame.event.get():
         # Force quit game
         if event.type == pygame.QUIT:
@@ -358,13 +362,13 @@ while flappy_bird:
                 bird_rect.center = (100, 384)
                 bird_movement = 0
                 flappybird_score = 0
+                N = 1
 
         # Creates pipes
+
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())
 
-    # background
-    screen.blit(background, (0, 0))
 
     # only display bird/pipes/score if game is running
     if game_running:
