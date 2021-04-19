@@ -8,10 +8,18 @@ import pickle
 from pygame.locals import *
 
 # LOAD HIGH SCORES FROM HIGH SCORE DICTIONARY ##########
+# Load dictionary
 score_dict = pickle.load(open("score_dict.p", "rb"))
+
+# Save high scores
 tetris_high_score = score_dict['tetris']
 flappybird_high_score = score_dict['flappybird']
 snake_high_score = score_dict['snake']
+
+# Write high scores as strings
+hs_strings = 'TETRIS HIGH SCORE: ' + str(tetris_high_score) + \
+             '  FLAPPYBIRD HIGH SCORE: ' + str(flappybird_high_score) + \
+             '  SNAKE HIGH SCORE: ' + str(snake_high_score)
 
 
 # CLASSES ##########
@@ -41,8 +49,9 @@ arc_screen_height = 958
 # Create display screen
 arc_screen = pygame.display.set_mode((arc_screen_width, arc_screen_height))
 
-# Set-up font
+# Set-up fonts
 arc_font = pygame.font.SysFont(None, 40)
+arc_font_small = pygame.font.SysFont(None, 18)
 
 # Set-up sound
 # https://freesound.org/people/BloodPixel/sounds/489557/
@@ -116,6 +125,10 @@ while arcade_running:
     arc_screen.blit(arc_bg.surf, arc_bg.rect)
 
     # Display text
+    high_scores_text = arc_font_small.render(hs_strings, True, (255, 0, 0))
+    arc_screen.blit(high_scores_text, (arc_screen_width / 2 - high_scores_text.get_rect().width / 2,
+                               arc_screen_height / 3 - 4 * high_scores_text.get_rect().height))
+
     arc_text = arc_font.render('WELCOME', True, (255, 255, 255))
     arc_screen.blit(arc_text, (arc_screen_width / 2 - arc_text.get_rect().width / 2,
                                arc_screen_height / 2 - 2 * arc_text.get_rect().height))
