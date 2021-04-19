@@ -15,6 +15,7 @@
 # 4/18: (2 hrs): Adding bird flap animation
 # 4/19: (1 hr): Added pause screen before first game, but can't figure out how to implement before replaying
 #               Centered text
+# 4/19: (30 min): Added sounds 
 
 
 # Imports
@@ -28,6 +29,20 @@ screen = pygame.display.set_mode((432, 768))
 clock = pygame.time.Clock()
 game_font = pygame.font.SysFont("chalkboard", 40)
 prompt_font = pygame.font.SysFont("chalkboard", 20)
+
+# Initialize sounds
+pygame.mixer.init()
+# Die: https://www.101soundboards.com/sounds/13785-die
+die_sound = pygame.mixer.Sound('sounds/fb.sounds/die.mp3')
+# Hit: https://www.101soundboards.com/sounds/13786-hit
+hit_sound = pygame.mixer.Sound('sounds/fb.sounds/hit.mp3')
+# Point: https://www.101soundboards.com/sounds/13787-point
+point_sound = pygame.mixer.Sound('sounds/fb.sounds/point.mp3')
+# Swoosh: https://www.101soundboards.com/sounds/13788-swoosh
+swoosh_sound = pygame.mixer.Sound('sounds/fb.sounds/swoosh.mp3')
+# wing: https://www.101soundboards.com/sounds/13789-wing
+wing_sound = pygame.mixer.Sound('sounds/fb.sounds/wing.mp3')
+
 
 # Game variables
 gravity = 0.18  # Makes bird drop
@@ -151,9 +166,11 @@ def check_collision(pipes):
     for pipe in pipes:
         # hit pipe
         if bird_rect.colliderect(pipe):
+            hit_sound.play()
             return False
     # hit top or bottom of screen
     if bird_rect.top <= -50 or bird_rect.bottom >= 650:
+        die_sound.play()
         return False
     return True
 
@@ -186,14 +203,14 @@ while open_background:
                 background = pygame.image.load('images/fb.images/background-day.png').convert()
                 background = pygame.transform.scale(background, (432, 768))
                 open_background = False
-                # button_sound.play()
+                point_sound.play()
 
             if event.key == pygame.K_2:
                 # Red Pipe
                 background = pygame.image.load('images/fb.images/background-night.png').convert()
                 background = pygame.transform.scale(background, (432, 768))
                 open_background = False
-                # button_sound.play()
+                point_sound.play()
 
             # Check for ESC key press
             if event.key == pygame.K_ESCAPE:
@@ -255,7 +272,7 @@ while open_bird:
                 pygame.time.set_timer(BIRDFLAP, 200)
 
                 open_bird = False
-                # button_sound.play()
+                point_sound.play()
 
             if event.key == pygame.K_2:
                 # Blue Bird
@@ -273,7 +290,7 @@ while open_bird:
                 BIRDFLAP = pygame.USEREVENT + 1
                 pygame.time.set_timer(BIRDFLAP, 200)
                 open_bird = False
-                # button_sound.play()
+                point_sound.play()
 
             if event.key == pygame.K_3:
                 bird_down = pygame.image.load('images/fb.images/redbird-downflap.png').convert_alpha()
@@ -290,7 +307,7 @@ while open_bird:
                 BIRDFLAP = pygame.USEREVENT + 1
                 pygame.time.set_timer(BIRDFLAP, 200)
                 open_bird = False
-                # button_sound.play()
+                point_sound.play()
 
             # Check for ESC key press
             if event.key == pygame.K_ESCAPE:
@@ -339,14 +356,14 @@ while open_pipe:
                 pipe_surface = pygame.image.load('images/fb.images/pipe-green.png').convert()
                 pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
                 open_pipe = False
-                # button_sound.play()
+                point_sound.play()
 
             if event.key == pygame.K_2:
                 # Red Pipe
                 pipe_surface = pygame.image.load('images/fb.images/pipe-red.png').convert()
                 pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
                 open_pipe = False
-                # button_sound.play()
+                point_sound.play()
 
             # Check for ESC key press
             if event.key == pygame.K_ESCAPE:
@@ -395,7 +412,7 @@ while pause_start:
                 pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
                 pause_start = False
                 flappy_bird = True
-                # button_sound.play()
+                swoosh_sound.play()
 
             # Check for ESC key press
             if event.key == pygame.K_ESCAPE:
@@ -437,6 +454,7 @@ while flappy_bird:
             if event.key == pygame.K_SPACE and game_running:
                 bird_movement = 0
                 bird_movement -= 5
+                wing_sound.play()
             # Key press to restart game
             if event.key == pygame.K_RETURN and game_running == False:
                 pause_start = True
@@ -445,6 +463,7 @@ while flappy_bird:
                 bird_rect.center = (100, 384)
                 bird_movement = 0
                 flappybird_score = 0
+                swoosh_sound.play()
 
         # Creates pipes
         if event.type == SPAWNPIPE:
