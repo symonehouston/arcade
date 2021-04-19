@@ -10,9 +10,12 @@
 # 4/18: (30 min): FIXED THE ESCAPE BUTTON
 # 4/18: (2 hrs): Loaded different birds and background
 # 4/18: (15 min): Part of group programming; fixing variables to work with main game
+# 4/18: (10 min): Part of group programming; fixing variables to work with main game
+
 
 import pygame
 import random
+import pickle
 
 # Initialize pygame
 pygame.init()
@@ -29,8 +32,9 @@ game_running = True  # Variable to make entire game loop run
 open_background = True  # Variable to keep opening background running
 open_bird = True  # Variable to keep opening bird running
 open_pipe = True  # Variable to keep opening pipe running
-flappybird_score = 0
-#flappybird_high_score = 0
+flappybird_score = 0  # Game Score
+score_dict = pickle.load(open('score_dict.p', 'rb'))  # Score dictionary
+flappybird_high_score = score_dict['flappy_bird']  # High score
 
 '''
 # Start Screen
