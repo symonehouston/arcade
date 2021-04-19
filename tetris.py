@@ -10,7 +10,8 @@ import pygame, random
 #April 15 - start initilize. time = .5 hour(s)
 #April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting
 #changed how i did the shapes to simply it. the new approach did not work with the way i did shapes at first. i tried changing
-#the way the computer interpreted the figures but it didn't work
+#the way the computer interpreted the figures but it didn't work time = .5 hour(s)
+#using the same function name as a variable, rotate
 
 #shapes list
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
@@ -25,17 +26,17 @@ class Pieces(object):
         self.x = x
         self.y = y
         self.shape = random.randint(0, len(shapes) - 1) #changed it to just shapes !
-        self.rotate = 0 #handles the case where you choose a different version of one shape
+        self.rotateS = 0 #handles the case where you choose a different version of one shape
         self.color = random.randint(0, len(sColor) - 1)
 
     def rotation(self):
         #have to make sure the number does not go over length of the
         inBound = len(self.shapes[self.type])
         #change rotation
-        self.rotate = (self.rotate + 1) % inBound
+        self.rotateS = (self.rotateS + 1) % inBound
 
     def displayImage(self):
-        return shapes[self.shape][self.rotate]
+        return shapes[self.shape][self.rotateS]
 
 class Tetris:
     width = 0
@@ -115,21 +116,21 @@ class Tetris:
             self.figure.y -= 1
             self.stopMoving()
 
+    def rotate(self):
+        temp = self.figure.rotation
+        self.figure.rotate()
+        if self.isTouching():
+            self.figure.rotation = temp
+
     #complete - left, right
-    def go_side(self, dx):
+    def leftRight(self, move):
         old_x = self.figure.x
-        self.figure.x += dx
+        self.figure.x += move
         if self.isTouching():
             self.figure.x = old_x
 
-    def rotate(self):
-        old_rotation = self.figure.rotation
-        self.figure.rotate()
-        if self.isTouching():
-            self.figure.rotation = old_rotation
-
     #duplicate down
-    def go_space(self):
+    def moreDown(self):
         while not self.isTouching():
             self.figure.y += 1
         self.figure.y -= 1
@@ -168,11 +169,11 @@ while not go:
             if event.key == pygame.K_DOWN:
                 down = True
             if event.key == pygame.K_LEFT:
-                game.go_side(-1)
+                game.leftRight(-1)
             if event.key == pygame.K_RIGHT:
-                game.go_side(1)
+                game.leftRight(1)
             if event.key == pygame.K_SPACE:
-                game.go_space()
+                game.moreDown()
             if event.key == pygame.K_ESCAPE:
                 game.__init__(20, 10)
 
