@@ -9,6 +9,7 @@
 # 4/18: (15 min): fixing esc
 # 4/18: (30 min): FIXED THE ESCAPE BUTTON
 # 4/18: (2 hrs): Loaded different birds and background
+# 4/18: (15 min): Part of group programming; fixing variables to work with main game
 
 import pygame
 import random
@@ -28,8 +29,8 @@ game_running = True  # Variable to make entire game loop run
 open_background = True  # Variable to keep opening background running
 open_bird = True  # Variable to keep opening bird running
 open_pipe = True  # Variable to keep opening pipe running
-score = 0
-high_score = 0
+flappybird_score = 0
+#flappybird_high_score = 0
 
 '''
 # Start Screen
@@ -46,18 +47,18 @@ def display_score(game):
 
     if game == 'main':
         # Score
-        score_surface = game_font.render(str(int(score)), True, (255, 255, 255))
+        score_surface = game_font.render(str(int(flappybird_score)), True, (255, 255, 255))
         score_rect = score_surface.get_rect(center=(216, 75))
         screen.blit(score_surface, score_rect)
 
     if game == 'game_over':
         #Score
-        score_surface = game_font.render(f'Score: {int(score)}', True, (255, 255, 255))
+        score_surface = game_font.render(f'Score: {int(flappybird_score)}', True, (255, 255, 255))
         score_rect = score_surface.get_rect(center=(216, 75))
         screen.blit(score_surface, score_rect)
 
         #High Score
-        high_score_surface = game_font.render(f'High Score: {int(high_score)}', True, (255, 255, 255))
+        high_score_surface = game_font.render(f'High Score: {int(flappybird_high_score)}', True, (255, 255, 255))
         high_score_rect = high_score_surface.get_rect(center=(216, 125))
         screen.blit(high_score_surface, high_score_rect)
 
@@ -72,10 +73,10 @@ def display_score(game):
         screen.blit(replay_surface, replay_rect)
 
 # Save + update High Score
-def new_record(score, high_score):
-    if score > high_score:
-        high_score = score
-    return high_score
+def new_record(flappybird_score, flappybird_high_score):
+    if flappybird_score > flappybird_high_score:
+        flappybird_high_score = flappybird_score
+    return flappybird_high_score
 
 
 #### BACKGROUND ####
@@ -352,7 +353,7 @@ while flappy_bird:
                 pipe_list.clear()
                 bird_rect.center = (100, 384)
                 bird_movement = 0
-                score = 0
+                flappybird_score = 0
 
         # Creates pipes
         if event.type == SPAWNPIPE:
@@ -375,7 +376,7 @@ while flappy_bird:
         draw_pipes(pipe_list)
 
         # score
-        score += 0.0062
+        flappybird_score += 0.0062
         display_score('main')
 
         # floor
@@ -387,7 +388,7 @@ while flappy_bird:
         floor = pygame.image.load('images/fb.images/base.png').convert()
         floor = pygame.transform.scale(floor, (432, 150))
         draw_floor()
-        high_score = new_record(score, high_score)
+        flappybird_high_score = new_record(flappybird_score, flappybird_high_score)
         display_score('game_over')
 
     pygame.display.update()
