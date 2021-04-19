@@ -1,9 +1,17 @@
 # 4/17: 3 hrs all coding main arcade screen
+# 4/18: 3 hrs all coding, working on high score and details
 
 # IMPORTS ##########
 import pygame
 import os
+import pickle
 from pygame.locals import *
+
+# LOAD HIGH SCORES FROM HIGH SCORE DICTIONARY ##########
+score_dict = pickle.load(open("score_dict.p", "rb"))
+tetris_high_score = score_dict['tetris']
+flappybird_high_score = score_dict['flappybird']
+snake_high_score = score_dict['snake']
 
 
 # CLASSES ##########
@@ -131,12 +139,10 @@ while arcade_running:
 pygame.mixer.music.stop()
 pygame.mixer.quit()
 
-'''
-print(score)
-import pickle
-score_dict = {}
-score_dict['snake'] = score
-pickle.dump(score_dict, open( "score_dict.p", "wb" ) )
-#to open with pickle
-#favorite_color = pickle.load( open( "save.p", "rb" ) )
-'''
+# Put new high scores in dictionary
+score_dict['tetris'] = tetris_high_score
+score_dict['flappybird'] = flappybird_high_score
+score_dict['snake'] = snake_high_score
+
+# Write over score_dict with new high scores
+pickle.dump(score_dict, open("score_dict.p", "wb"))
