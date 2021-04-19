@@ -15,7 +15,8 @@
 # 4/18: (2 hrs): Adding bird flap animation
 # 4/19: (1 hr): Added pause screen before first game, but can't figure out how to implement before replaying
 #               Centered text
-# 4/19: (30 min): Added sounds 
+# 4/19: (30 min): Added sounds
+# 4/19: (15 min): Playing around with timing of pipe spawn
 
 
 # Imports
@@ -133,6 +134,8 @@ pipe_surface = pygame.image.load('images/fb.images/pipe-green.png').convert()
 pipe_surface = pygame.transform.scale(pipe_surface, (75, 600))
 pipe_list = []
 SPAWNPIPE = pygame.USEREVENT
+#pipe_spawn_speed = 1200
+#pygame.time.set_timer(SPAWNPIPE, pipe_spawn_speed)
 pygame.time.set_timer(SPAWNPIPE, 1200)
 pipe_height = [300, 400, 500]
 
@@ -463,6 +466,7 @@ while flappy_bird:
                 bird_rect.center = (100, 384)
                 bird_movement = 0
                 flappybird_score = 0
+                #pipe_spawn_speed = 1200
                 swoosh_sound.play()
 
         # Creates pipes
@@ -489,6 +493,7 @@ while flappy_bird:
 
         # pipes
         pipe_list = move_pipes(pipe_list)
+        #pipe_spawn_speed += 20  makes pipe spawn faster?
         draw_pipes(pipe_list)
 
         # score
