@@ -1,15 +1,5 @@
 import pygame, random
 
-#determine the size of the screen. time = 10 minutes
-WIDTH = 800
-HEIGHT = 700
-blockW = 300
-blockH = 600
-blockS = 30
-
-top_left_x = (WIDTH - HEIGHT) // 2
-top_left_y = blockW - blockH
-
 #April 1 - creating the shapes for the game. I used a youtube tutorial to help see how to code shapes and then
 #drew out the different directions they could go. time = 1.5 hour(s)
 #errors: keep getting an error about a tuple, and it took me awhile to find out what the problem was
@@ -19,109 +9,11 @@ top_left_y = blockW - blockH
 #April 9 - game over. time = 1 hour(s)
 #April 15 - start initilize. time = .5 hour(s)
 #April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting
+#changed how i did the shapes to simply it. the new approach did not work with the way i did shapes at first. i tried changing
+#the way the computer interpreted the figures but it didn't work
 
-I = [['..0..',
-      '..0..',
-      '..0..',
-      '..0..',
-      '.....'],
-     ['.....',
-      '0000.',
-      '.....',
-      '.....',
-      '.....']]
-L = [['.....',
-      '...0.',
-      '.000.',
-      '.....',
-      '.....'],
-     ['.....',
-      '..0..',
-      '..0..',
-      '..00.',
-      '.....'],
-     ['.....',
-      '.....',
-      '.000.',
-      '.0...',
-      '.....'],
-     ['.....',
-      '.00..',
-      '..0..',
-      '..0..',
-      '.....']]
-
-J = [['.....',
-      '.0...',
-      '.000.',
-      '.....',
-      '.....'],
-     ['.....',
-      '..00.',
-      '..0..',
-      '..0..',
-      '.....'],
-     ['.....',
-      '.....',
-      '.000.',
-      '...0.',
-      '.....'],
-     ['.....',
-      '..0..',
-      '..0..',
-      '.00..',
-      '.....']]
-
-O = [['.....',
-      '.....',
-      '.00..',
-      '.00..',
-      '.....']]
-
-Z = [['.....',
-      '.....',
-      '.00..',
-      '..00.',
-      '.....'],
-     ['.....',
-      '..0..',
-      '.00..',
-      '.0...',
-      '.....']]
-
-T = [['.....',
-      '..0..',
-      '.000.',
-      '.....',
-      '.....'],
-     ['.....',
-      '.....',
-      '.000.',
-      '..0..',
-      '.....'],
-     ['.....',
-      '..0..',
-      '..00.',
-      '..0..',
-      '.....'],
-     ['.....',
-      '..0..',
-      '.00..',
-      '..0..',
-      '.....']]
-
-S = [['.....',
-      '..0..',
-      '..00.',
-      '...0.',
-      '.....'],
-      ['.....',
-      '......',
-      '..00..',
-      '.00...',
-      '......']]
 #shapes list
-shapes = [I,L,J,O,Z,T,S]
+shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
 
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
 sColor = [(211,211,211), (0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
@@ -159,8 +51,8 @@ class Tetris:
     zoom = 20
 
     def __init__(self, height, width):
-        self.height = HEIGHT
-        self.width = WIDTH
+        self.height = height
+        self.width = width
         self.grid = []
         for i in range(height):
             new_line = []
@@ -169,20 +61,20 @@ class Tetris:
             self.grid.append(new_line)
 
     def startSpot(self):
-        self.figure = Pieces(top_left_x, 0)
+        self.figure = Pieces(5, 0)
 
-    def breakL():
+    def breakL(self):
         numLines = 0
         for row in range(1, self.height):
             zeros = 0
             for col in range(self.width):
-                if self.field[row][col] == 0:
+                if self.grid[row][col] == 0:
                     zeros += 1
             if zeros == 0:
                 numLines += 1
                 for x in range(row, 1, -1):
                     for y in range(self.width):
-                        self.field[x][y] = self.field[x - 1][y]
+                        self.grid[x][y] = self.grid[x - 1][y]
 
     #need to check if a figure is out of bounds or touching something else
     #time = .5 hour(s)
@@ -192,25 +84,25 @@ class Tetris:
         touch = False #need to return a boolean
         for i in range(4):
             for n in range(4):
-                if i * 4 + n in self.figure.image():
+                if i * 4 + n in self.figure.displayImage():
                     #account for left and right
                     if self.figure.x + n < 0:
                         touch = True
                     if self.figure.x + n > self.width - 1:
                         touch = True
                     #only have to account for going down
-                    if i + self.figure.n > self.height - 1:
+                    if i + self.figure.y > self.height - 1:
                        touch = True
                     #checking if a color is there
-                    if self.grid[self.figure.y + i][self.figure.x + n] == 0:
+                    if self.grid[self.figure.y + i][self.figure.x + n] > 0: # my logic was weong with the new button
                         touch = True
         return touch
 
     def stopMoving(self):
         for i in range(4):
             for j in range(4):
-                if i * 4 + j in self.figure.image():
-                    self.field[i + self.figure.y][j + self.figure.x] = self.figure.color
+                if i * 4 + j in self.figure.displayImage():
+                    self.grid[i + self.figure.y][j + self.figure.x] = self.figure.color
         self.breakL()
         self.startSpot()
         if self.isTouching():
@@ -224,7 +116,24 @@ class Tetris:
             self.stopMoving()
 
     #complete - left, right
+    def go_side(self, dx):
+        old_x = self.figure.x
+        self.figure.x += dx
+        if self.isTouching():
+            self.figure.x = old_x
 
+    def rotate(self):
+        old_rotation = self.figure.rotation
+        self.figure.rotate()
+        if self.isTouching():
+            self.figure.rotation = old_rotation
+
+    #duplicate down
+    def go_space(self):
+        while not self.isTouching():
+            self.figure.y += 1
+        self.figure.y -= 1
+        self.freeze()
 
 pygame.init()
 
@@ -248,7 +157,7 @@ while not go:
         counter = 0
 
     if counter % (25 // game.level // 2) == 0 or down:
-        if game.state == "play":
+        if game.status == "play":
             game.down()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -284,8 +193,8 @@ while not go:
         for i in range(4):
             for j in range(4):
                 temp = i * 4 + j
-                if temp in game.figure.image():
-                    pygame.draw.rect(screen, colors[game.figure.color],
+                if temp in game.figure.displayImage():
+                    pygame.draw.rect(screen, sColor[game.figure.color],
                                      [game.x + game.zoom * (j + game.figure.x) + 1,
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
