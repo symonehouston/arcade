@@ -17,6 +17,7 @@
 #               Centered text
 # 4/19: (30 min): Added sounds
 # 4/19: (15 min): Playing around with timing of pipe spawn
+# 4/19: (30 min): Made better intro and outro screen 
 
 
 # Imports
@@ -396,11 +397,14 @@ while pause_start:
     draw_floor()
 
     # Display text
-    text = prompt_font.render('Get Ready', True, (255, 255, 255))
-    screen.blit(text, [screen_width / 2 - text.get_rect().width / 2, 75])
+    press_text = game_font.render('Space To Begin', True, (255, 255, 255))
+    screen.blit(press_text, [screen_width / 2 - press_text.get_rect().width / 2, 580])
 
-    press_text = prompt_font.render('Press Space To Begin', True, (255, 255, 255))
-    screen.blit(press_text, [screen_width / 2 - press_text.get_rect().width / 2, 125])
+    # Display Get Ready picture
+    intro_surface = pygame.image.load('images/fb.images/message.png').convert_alpha()
+    intro_surface = pygame.transform.scale2x(intro_surface)
+    screen.blit(intro_surface, (screen_width / 2 - intro_surface.get_rect().width/2,
+                                screen_height / 2 - intro_surface.get_rect().height/2 - 80))
 
     # Event for loop
     for event in pygame.event.get():
@@ -511,6 +515,12 @@ while flappy_bird:
         draw_floor()
         flappybird_high_score = new_record(flappybird_score, flappybird_high_score)
         display_score('game_over')
+
+        # Game over image
+        outro_surface = pygame.image.load('images/fb.images/gameover.png').convert_alpha()
+        outro_surface = pygame.transform.scale2x(outro_surface)
+        screen.blit(outro_surface, (screen_width / 2 - outro_surface.get_rect().width / 2,
+                                    screen_height / 2 - outro_surface.get_rect().height / 2 - 100))
 
     pygame.display.update()
     # base rate speed of the game
