@@ -11,7 +11,8 @@
 # 4/18: (2 hrs): Loaded different birds and background
 # 4/18: (15 min): Part of group programming; fixing variables to work with main game
 # 4/18: (10 min): Part of group programming; fixing variables to work with main game
-# 4/18: (): Trying to figure out time delays
+# 4/18: (1 hr): Trying (and failing) to figure out time delays
+# 4/18: (2 hrs): Adding bird flap animation
 
 
 import pygame
@@ -19,6 +20,8 @@ import random
 import pickle
 
 # Initialize pygame
+import pygame as pygame
+
 pygame.init()
 screen = pygame.display.set_mode((432, 768))
 clock = pygame.time.Clock()
@@ -92,11 +95,18 @@ def draw_floor():
     screen.blit(floor, (floor_x_pos, 650))
     screen.blit(floor, (floor_x_pos + 432, 650))
 
-
+#### BIRD ####
 # Bird rotation
 def rotate_bird(bird):
     new_bird = pygame.transform.rotozoom(bird, -bird_movement * 2, 1)
     return new_bird
+
+# Bird animation
+def bird_flap():
+    new_bird = bird_animation[bird_index]
+    new_bird_rect = new_bird.get_rect(center=(100,bird_rect.centery))
+    return new_bird, new_bird_rect
+
 
 
 #### PIPES ####
@@ -223,24 +233,55 @@ while open_bird:
             # Check what key is pressed
             if event.key == pygame.K_1:
                 # Yellow bird
-                bird = pygame.image.load('images/fb.images/yellowbird-midflap.png').convert_alpha()
-                bird = pygame.transform.scale(bird, (45, 45))
+                bird_down = pygame.image.load('images/fb.images/yellowbird-downflap.png').convert_alpha()
+                bird_down = pygame.transform.scale(bird_down, (45, 45))
+                bird_mid = pygame.image.load('images/fb.images/yellowbird-midflap.png').convert_alpha()
+                bird_mid = pygame.transform.scale(bird_mid, (45, 45))
+                bird_up = pygame.image.load('images/fb.images/yellowbird-upflap.png').convert_alpha()
+                bird_up = pygame.transform.scale(bird_up, (45, 45))
+                bird_animation = [bird_down, bird_mid, bird_up]
+                bird_index = 0
+                bird = bird_animation[bird_index]
                 bird_rect = bird.get_rect(center=(100, 384))
+
+                BIRDFLAP = pygame.USEREVENT + 1
+                pygame.time.set_timer(BIRDFLAP, 200)
+
                 open_bird = False
                 # button_sound.play()
 
             if event.key == pygame.K_2:
                 # Blue Bird
-                bird = pygame.image.load('images/fb.images/bluebird-midflap.png').convert_alpha()
-                bird = pygame.transform.scale(bird, (45, 45))
+                bird_down = pygame.image.load('images/fb.images/bluebird-downflap.png').convert_alpha()
+                bird_down = pygame.transform.scale(bird_down, (45, 45))
+                bird_mid = pygame.image.load('images/fb.images/bluebird-midflap.png').convert_alpha()
+                bird_mid = pygame.transform.scale(bird_mid, (45, 45))
+                bird_up = pygame.image.load('images/fb.images/bluebird-upflap.png').convert_alpha()
+                bird_up = pygame.transform.scale(bird_up, (45, 45))
+                bird_animation = [bird_down, bird_mid, bird_up]
+                bird_index = 0
+                bird = bird_animation[bird_index]
                 bird_rect = bird.get_rect(center=(100, 384))
+
+                BIRDFLAP = pygame.USEREVENT + 1
+                pygame.time.set_timer(BIRDFLAP, 200)
                 open_bird = False
                 # button_sound.play()
 
             if event.key == pygame.K_3:
-                bird = pygame.image.load('images/fb.images/redbird-midflap.png').convert_alpha()
-                bird = pygame.transform.scale(bird, (45, 45))
+                bird_down = pygame.image.load('images/fb.images/redbird-downflap.png').convert_alpha()
+                bird_down = pygame.transform.scale(bird_down, (45, 45))
+                bird_mid = pygame.image.load('images/fb.images/redbird-midflap.png').convert_alpha()
+                bird_mid = pygame.transform.scale(bird_mid, (45, 45))
+                bird_up = pygame.image.load('images/fb.images/redbird-upflap.png').convert_alpha()
+                bird_up = pygame.transform.scale(bird_up, (45, 45))
+                bird_animation = [bird_down, bird_mid, bird_up]
+                bird_index = 0
+                bird = bird_animation[bird_index]
                 bird_rect = bird.get_rect(center=(100, 384))
+
+                BIRDFLAP = pygame.USEREVENT + 1
+                pygame.time.set_timer(BIRDFLAP, 200)
                 open_bird = False
                 #button_sound.play()
 
@@ -362,12 +403,21 @@ while flappy_bird:
                 bird_rect.center = (100, 384)
                 bird_movement = 0
                 flappybird_score = 0
-                N = 1
+                #N = 1
 
         # Creates pipes
-
         if event.type == SPAWNPIPE:
             pipe_list.extend(create_pipe())
+
+        # Bird animation
+        if event.type == BIRDFLAP:
+            if bird_index < 2:
+                bird_index +=1
+            else:
+                bird_index = 0
+
+            bird, bird_rect = bird_flap()
+
 
 
     # only display bird/pipes/score if game is running
