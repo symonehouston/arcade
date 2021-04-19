@@ -25,6 +25,7 @@
 import pygame
 import random
 import os
+import pickle
 
 # Import for ability to use keyboard keys
 from pygame.locals import *
@@ -34,8 +35,8 @@ from pygame.locals import *
 
 
 # FIND HIGH SCORE ##############################
-snake_high_score = 0  # change this to dictionary snake_high_score later
-
+score_dict = pickle.load(open("score_dict.p", "rb"))
+snake_high_score = score_dict['snake']
 
 # END FIND HIGH SCORE ##############################
 ####################################################
