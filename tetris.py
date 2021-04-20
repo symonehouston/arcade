@@ -8,10 +8,14 @@ import pygame, random
 #April 8 - checked if the shapes touched and line break. time = 1 hour(s)
 #April 9 - game over. time = 1 hour(s)
 #April 15 - start initilize. time = .5 hour(s)
-#April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting
+#April 18 - finish initilize and displaying the game. ran into sooo many BUGS :( time = 2.5 hours and counting -> 3 hours
 #changed how i did the shapes to simply it. the new approach did not work with the way i did shapes at first. i tried changing
 #the way the computer interpreted the figures but it didn't work time = .5 hour(s)
-#using the same function name as a variable, rotate
+#errors i found and debugged:
+#   -using the same function name as a variable, rotate
+#   -was using the wrong number for drawing figure (made different files and tried changing different pieces) -> time = 2 hours
+#April 19 - my pieces drop but now i have a problem getting them to rotate because the function is not being recognized.
+#   - fixed rotation issue but now it does not work with the grid bounds
 
 #shapes list
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
@@ -21,20 +25,25 @@ sColor = [(211,211,211), (0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,
 
 #class for Piece. time = 15 minutes
 class Pieces(object):
+    x = 0 #########################################
+    y = 0 #########################################
 
+    #initilize the piece with attributes
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        self.x = x #x-coordinate
+        self.y = y #y-coordinate
         self.shape = random.randint(0, len(shapes) - 1) #changed it to just shapes !
         self.rotateS = 0 #handles the case where you choose a different version of one shape
         self.color = random.randint(0, len(sColor) - 1)
 
+    #rotate shape
     def rotation(self):
         #have to make sure the number does not go over length of the
-        inBound = len(self.shapes[self.type])
+        inBound = len(self.shapes[self.shape])
         #change rotation
         self.rotateS = (self.rotateS + 1) % inBound
 
+    #show the piece
     def displayImage(self):
         return shapes[self.shape][self.rotateS]
 
@@ -52,13 +61,14 @@ class Tetris:
     zoom = 20
 
     def __init__(self, height, width):
+        score = 0
         self.height = height
         self.width = width
         self.grid = []
         for i in range(height):
             new_line = []
             for j in range(width):
-                new_line.append(1) #used 1 because my figures are 0
+                new_line.append(0)
             self.grid.append(new_line)
 
     def startSpot(self):
@@ -117,10 +127,10 @@ class Tetris:
             self.stopMoving()
 
     def rotate(self):
-        temp = self.figure.rotation
-        self.figure.rotate()
+        temp = self.figure.rotateS
+        self.figure.rotation()
         if self.isTouching():
-            self.figure.rotation = temp
+            self.figure.rotateS= temp
 
     #complete - left, right
     def leftRight(self, move):
