@@ -16,6 +16,10 @@ import pygame, random
 #   -was using the wrong number for drawing figure (made different files and tried changing different pieces) -> time = 2 hours
 #April 19 - my pieces drop but now i have a problem getting them to rotate because the function is not being recognized.
 #   - fixed rotation issue but now it does not work with the grid bounds
+#   - having seperate if statements caused an issue (this took awhile to figure out because i changed none of my logic, just wrote it together)
+#   time = 1.5 hours
+#April 20 - pieces are showing and dropping properly. only the long piece acts weird
+#   -to do: fix disappearing piece, customize project more -> backgrounds, score, different button options
 
 #shapes list
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
@@ -28,6 +32,8 @@ class Pieces(object):
     x = 0 #########################################
     y = 0 #########################################
 
+    global shapes
+
     #initilize the piece with attributes
     def __init__(self, x, y):
         self.x = x #x-coordinate
@@ -39,7 +45,7 @@ class Pieces(object):
     #rotate shape
     def rotation(self):
         #have to make sure the number does not go over length of the
-        inBound = len(self.shapes[self.shape])
+        inBound = len(shapes[self.shape])
         #change rotation
         self.rotateS = (self.rotateS + 1) % inBound
 
@@ -96,16 +102,8 @@ class Tetris:
         for i in range(4):
             for n in range(4):
                 if i * 4 + n in self.figure.displayImage():
-                    #account for left and right
-                    if self.figure.x + n < 0:
-                        touch = True
-                    if self.figure.x + n > self.width - 1:
-                        touch = True
-                    #only have to account for going down
-                    if i + self.figure.y > self.height - 1:
-                       touch = True
-                    #checking if a color is there
-                    if self.grid[self.figure.y + i][self.figure.x + n] > 0: # my logic was weong with the new button
+                    #account for left and right and down
+                    if self.figure.x + n < 0 or self.figure.x + n > self.width - 1 or self.figure.y + i > self.height - 1 or self.grid[self.figure.y + i][self.figure.x + n] > 0:
                         touch = True
         return touch
 
@@ -185,6 +183,7 @@ while not go:
             if event.key == pygame.K_SPACE:
                 game.moreDown()
             if event.key == pygame.K_ESCAPE:
+            #add a new option!!!!!!!!!! because you may not want to start new game
                 game.__init__(20, 10)
 
     if event.type == pygame.KEYUP:
