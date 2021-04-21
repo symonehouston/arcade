@@ -4,7 +4,7 @@ Group Members: Symone Houston, Rachana Chau, Jessica McDonald
 
 **Arcade Description:** 
 
-We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user is able to play any of these three classic games (with some extra design flairs). The game keeps track of the user's high scores locally, but these high scores can be reset to zero at any time.
+We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user is able to play any of these three classic games (with some extra design flairs). The arcade keeps track of the user's high scores locally, but these high scores can be reset to zero at any time.
 
 **Getting Started:** 
 
@@ -52,5 +52,6 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
 - Read instruction and press the space bar to begin
 - Use the arrow keys to move the snake and collect food
 - Do not touch the edges and do not run into yourself
+- The end screen will automatically close after 5 seconds and bring you back to the main arcade
 
 **HAVE FUN!!**
