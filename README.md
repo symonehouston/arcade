@@ -5,9 +5,7 @@ Group Members: Symone Houston, Rachana Chau, Jessica McDonald
 **Arcade Description:** 
 
 We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user is able to play any of these three classic games (with some extra design flairs). The arcade keeps track of the user's high scores locally, but these high scores can be reset to zero at any time.
-
-<br><br\>
-
+<br\><br\>
 **Getting Started:** 
 
 *Opening the project on PyCharm*
