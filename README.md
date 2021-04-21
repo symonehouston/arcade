@@ -7,7 +7,8 @@ Group Members: Symone Houston, Rachana Chau, Jessica McDonald
 We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user is able to play any of these three classic games (with some extra design flairs). The game keeps track of the user's high scores locally, but these high scores can be reset to zero at any time.
 
 **Getting Started:** 
-Opening the project on PyCharm
+
+*Opening the project on PyCharm*
 
 - Add this repository as a project on PyCharm
 - Open the "arcade" project on PyCharm
@@ -25,12 +26,14 @@ Opening the project on PyCharm
   - Running "highscoreinit.py" again will reset the high scores to zero; high scores are saved on your local device otherwise
 
 **How to play:**
+
 *Main Screen*
 - Read the prompt on the screen and click the appropriate key to play a game
 
 *Tetris*
 
 *Flappy Bird*
+
 - Read the prompts on the screen
   - Select (1) or (2) to choose a background
   - Select (1), (2), or (3) to choose a bird color
@@ -42,6 +45,7 @@ Opening the project on PyCharm
 - After you lose, press "return" to replay or "esc" to return to the arcade main screen
 
 *Snake*
+
 - Read the prompts on the screen
   - Select (1), (2), (3), or (4) to choose a snake skin
   - Select (1), (2), (3), or (4) to choose a background
