@@ -1,6 +1,7 @@
 # 4/17: 3 hrs all coding main arcade screen
 # 4/18: 3 hrs all coding, working on high score and details
-# 4/21: 1 hr all coding, trying to fix high score 
+# 4/21: 1 hr all coding, trying to fix high score
+# 4/21: 30 min all coding, fixing bugs in high score
 
 # IMPORTS ##########
 import pygame
@@ -83,7 +84,13 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+
+                # Put new high scores in dictionary
                 tetris_high_score = int(tetris_high_score)
+                score_dict['tetris'] = tetris_high_score
+
+                # Write over score_dict with new high scores
+                pickle.dump(score_dict, open("score_dict.p", "wb"))
                 pygame.mixer.music.unpause()
 
                 # Reset display size
@@ -96,7 +103,13 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+
+                # Put new high scores in dictionary
                 flappybird_high_score = int(flappybird_high_score)
+                score_dict['flappybird'] = flappybird_high_score
+
+                # Write over score_dict with new high scores
+                pickle.dump(score_dict, open("score_dict.p", "wb"))
                 pygame.mixer.music.unpause()
 
                 # Reset display size
@@ -109,7 +122,13 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+
+                # Put new high scores in dictionary
                 snake_high_score = int(snake_high_score)
+                score_dict['snake'] = snake_high_score
+
+                # Write over score_dict with new high scores
+                pickle.dump(score_dict, open("score_dict.p", "wb"))
                 pygame.mixer.music.unpause()
 
                 # Reset display size
@@ -155,10 +174,3 @@ while arcade_running:
 pygame.mixer.music.stop()
 pygame.mixer.quit()
 
-# Put new high scores in dictionary
-score_dict['tetris'] = tetris_high_score
-score_dict['flappybird'] = flappybird_high_score
-score_dict['snake'] = snake_high_score
-
-# Write over score_dict with new high scores
-pickle.dump(score_dict, open("score_dict.p", "wb"))
