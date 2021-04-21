@@ -127,6 +127,9 @@ pygame.mixer.init()
 # Initialize
 pygame.init()
 
+# Name screen
+pygame.display.set_caption("Snake")
+
 # Screen dimensions
 screen_width = 500
 screen_height = 500

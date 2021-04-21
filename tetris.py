@@ -171,19 +171,24 @@ class Background(pygame.sprite.Sprite):
     # Initialize
     def __init__(self):
         super(Background, self).__init__()
-        self.img_load = pygame.image.load(os.path.join('images', 'mario.jpeg'))
+        self.img_load = pygame.image.load(os.path.join('images', tet))
         self.surf = pygame.transform.scale2x(self.img_load)
         self.rect = self.surf.get_rect()
         self.rect.left, self.rect.top = (0, 0)
 
 pygame.init()
-
-mario_bg = Background()
-
 size = (400, 500)
 screen = pygame.display.set_mode(size)
-
 pygame.display.set_caption("Tetris")
+
+# ADD LOOP HERE
+    # SET JPEGS: tet = mario.jpeg
+
+tet_bg = Background()
+
+
+
+
 
 # Loop until the user clicks the close button.
 go = False
@@ -228,7 +233,7 @@ while not go:
     #1. basic color
     #if whichBackground == 0:
     screen.fill((246,229,199))
-    screen.blit(mario_bg.surf, mario_bg.rect)
+    screen.blit(tet_bg.surf, tet_bg.rect)
     #elif whichBackground == 1:
 
 
