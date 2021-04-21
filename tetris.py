@@ -1,4 +1,4 @@
-import pygame, random
+import pygame, random, os, pickle
 
 #April 1 - creating the shapes for the game. I used a youtube tutorial to help see how to code shapes and then
 #drew out the different directions they could go. time = 1.5 hour(s)
@@ -19,13 +19,33 @@ import pygame, random
 #   - having seperate if statements caused an issue (this took awhile to figure out because i changed none of my logic, just wrote it together)
 #   time = 1.5 hours
 #April 20 - pieces are showing and dropping properly. only the long piece acts weird
-#   -to do: fix disappearing piece, customize project more -> backgrounds, score, different button options
+#   - score works
+#   - started working on different background options
+#April 21 (w Jess) 
+#   - loading screen
+#   - finish backgrounds
+#   - add messages for breaking lines
+#   - ensure whole arcade works
+#   - finish commenting
+
+
+# FIND HIGH SCORE ##############################
+score_dict = pickle.load(open("score_dict.p", "rb"))
+tetris_high_score = score_dict['tetris']
+# END FIND HIGH SCORE ##############################
+####################################################
 
 #shapes list
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
 
+#user messages
+m1 = "Great job!"
+m2 = "You're good at this game."
+m3 = "Are you trying to get a high score?"
+message = [m1,m2,m3]
+
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
-sColor = [(211,211,211), (0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
+sColor = [(50,0,50), (50,0,50),(0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
 
 #class for Piece. time = 15 minutes
 class Pieces(object):
@@ -40,7 +60,7 @@ class Pieces(object):
         self.y = y #y-coordinate
         self.shape = random.randint(0, len(shapes) - 1) #changed it to just shapes !
         self.rotateS = 0 #handles the case where you choose a different version of one shape
-        self.color = random.randint(0, len(sColor) - 1)
+        self.color = random.randint(1, len(sColor) - 1)
 
     #rotate shape
     def rotation(self):
@@ -53,6 +73,7 @@ class Pieces(object):
     def displayImage(self):
         return shapes[self.shape][self.rotateS]
 
+#Tetris class: defines the game
 class Tetris:
     width = 0
     height = 0
@@ -71,6 +92,7 @@ class Tetris:
         self.height = height
         self.width = width
         self.grid = []
+        self.status = "play"
         for i in range(height):
             new_line = []
             for j in range(width):
@@ -78,7 +100,7 @@ class Tetris:
             self.grid.append(new_line)
 
     def startSpot(self):
-        self.figure = Pieces(5, 0)
+        self.figure = Pieces(3, 0)
 
     def breakL(self):
         numLines = 0
@@ -92,6 +114,7 @@ class Tetris:
                 for x in range(row, 1, -1):
                     for y in range(self.width):
                         self.grid[x][y] = self.grid[x - 1][y]
+        self.score += numLines ** 2
 
     #need to check if a figure is out of bounds or touching something else
     #time = .5 hour(s)
@@ -142,7 +165,7 @@ class Tetris:
         while not self.isTouching():
             self.figure.y += 1
         self.figure.y -= 1
-        self.freeze()
+        self.stopMoving()
 
 pygame.init()
 
@@ -184,13 +207,20 @@ while not go:
                 game.moreDown()
             if event.key == pygame.K_ESCAPE:
             #add a new option!!!!!!!!!! because you may not want to start new game
-                game.__init__(20, 10)
+                break
 
     if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
                 down = False
 
-    screen.fill((255, 255, 255))
+    #this is the background:
+    #whichBackground = random.randint(0,2)
+    #1. basic color
+    #if whichBackground == 0:
+    screen.fill((246,229,199))
+    #elif whichBackground == 1:
+
+
 
     for i in range(game.height):
         for j in range(game.width):
@@ -209,13 +239,13 @@ while not go:
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
 
-    font = pygame.font.SysFont('timesnewroman', 25, True, False)
-    font1 = pygame.font.SysFont('timesnewroman', 65, True, False)
+    font = pygame.font.SysFont('comicsans', 25, True, False)
+    font1 = pygame.font.SysFont('comicsans', 65, True, False)
     text = font.render("Score: " + str(game.score), True, (0, 0, 0))
     gameEnd = font1.render("Game Over", True, (0, 0, 55))
     gameEscape = font1.render("Press ESC", True, (0, 0, 55))
 
-    screen.blit(text, [0, 0])
+    screen.blit(text, [15, 15])
     if game.status == "gameover":
         screen.blit(gameEnd, [20, 200])
         screen.blit(gameEscape, [25, 265])
@@ -223,5 +253,11 @@ while not go:
     pygame.display.flip()
     clock.tick(25)
 
-pygame.quit()
+# FINAL SCREEN ##############################
+
+# New high score if player beats current high score
+if game.score > tetris_high_score:
+    tetris_high_score = game.score
+
+
 
