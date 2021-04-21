@@ -1,5 +1,6 @@
 # 4/17: 3 hrs all coding main arcade screen
 # 4/18: 3 hrs all coding, working on high score and details
+# 4/21: 1 hr all coding, trying to fix high score 
 
 # IMPORTS ##########
 import pygame
@@ -15,11 +16,6 @@ score_dict = pickle.load(open("score_dict.p", "rb"))
 tetris_high_score = score_dict['tetris']
 flappybird_high_score = score_dict['flappybird']
 snake_high_score = score_dict['snake']
-
-# Write high scores as strings
-hs_strings = 'TETRIS HIGH SCORE: ' + str(tetris_high_score) + \
-             '  FLAPPYBIRD HIGH SCORE: ' + str(flappybird_high_score) + \
-             '  SNAKE HIGH SCORE: ' + str(snake_high_score)
 
 
 # CLASSES ##########
@@ -68,6 +64,10 @@ arcade_running = True
 
 # MAIN LOOP ##########
 while arcade_running:
+    # Write high scores as strings
+    hs_strings = 'TETRIS HIGH SCORE: ' + str(tetris_high_score) + \
+                 '  FLAPPYBIRD HIGH SCORE: ' + str(flappybird_high_score) + \
+                 '  SNAKE HIGH SCORE: ' + str(snake_high_score)
 
     # Event for loop
     for event in pygame.event.get():
@@ -83,6 +83,7 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+                tetris_high_score = int(tetris_high_score)
                 pygame.mixer.music.unpause()
 
                 # Reset display size
@@ -95,6 +96,7 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+                flappybird_high_score = int(flappybird_high_score)
                 pygame.mixer.music.unpause()
 
                 # Reset display size
@@ -107,6 +109,7 @@ while arcade_running:
                 read = file.read()
                 exec(read)
                 file.close()
+                snake_high_score = int(snake_high_score)
                 pygame.mixer.music.unpause()
 
                 # Reset display size
