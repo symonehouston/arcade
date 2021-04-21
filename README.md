@@ -6,8 +6,6 @@ Group Members: Symone Houston, Rachana Chau, Jessica McDonald
 
 We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user is able to play any of these three classic games (with some extra design flairs). The arcade keeps track of the user's high scores locally, but these high scores can be reset to zero at any time.
 
-<br>
-<br>
 **Getting Started:** 
 
 *Opening the project on PyCharm*
@@ -27,8 +25,6 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
   - You do not need to run "highscoreinit.py" if you would like to play again
   - Running "highscoreinit.py" again will reset the high scores to zero; high scores are saved on your local device otherwise
 
- 
- 
 **How to play:**
 
 *Main Screen*
@@ -58,10 +54,6 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
 - Do not touch the edges and do not run into yourself
 - The end screen will automatically close after 5 seconds and bring you back to the main arcade
 
- 
- 
 Packages Used: pygame, os, pickle, random
 
- 
- 
 **HAVE FUN!!**
