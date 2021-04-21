@@ -167,7 +167,18 @@ class Tetris:
         self.figure.y -= 1
         self.stopMoving()
 
+class Background(pygame.sprite.Sprite):
+    # Initialize
+    def __init__(self):
+        super(Background, self).__init__()
+        self.img_load = pygame.image.load(os.path.join('images', 'mario.jpeg'))
+        self.surf = pygame.transform.scale2x(self.img_load)
+        self.rect = self.surf.get_rect()
+        self.rect.left, self.rect.top = (0, 0)
+
 pygame.init()
+
+mario_bg = Background()
 
 size = (400, 500)
 screen = pygame.display.set_mode(size)
@@ -217,6 +228,7 @@ while not go:
     #1. basic color
     #if whichBackground == 0:
     screen.fill((246,229,199))
+    screen.blit(mario_bg.surf, mario_bg.rect)
     #elif whichBackground == 1:
 
 
@@ -244,38 +256,41 @@ while not go:
     gameEnd = font1.render("Game Over", True, (0, 0, 55))
     gameEscape = font1.render("Press ESC", True, (0, 0, 55))
 
-    # FINAL SCREEN ##############################
-
-    # New high score if player beats current high score
-    if game.score > tetris_high_score:
-        tetris_high_score = game.score
-
     screen.blit(text, [15, 15])
+
     if game.status == "gameover":
-        screen.fill((0, 0, 0))
-
-        # Define and display text
-        text = font.render('GAME OVER', True, (255, 0, 0))
-        screen.blit(text, (screen_width / 2 - (text.get_rect().width) / 2,
-                       screen_height / 2 - (text.get_rect().height) / 2))
-
-        number_text = font.render(string_score, True, (255, 0, 0))
-        screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
-                              screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
-
-        hs_text = font.render(string_hs, True, (255, 0, 0))
-        screen.blit(hs_text, (screen_width / 2 - hs_text.get_rect().width / 2,
-                          screen_height / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
-
-        # Update display
-        pygame.display.flip()
-
-        # Wait 5 seconds then end
-        pygame.time.delay(5000)
+        go = True
 
     pygame.display.flip()
     clock.tick(25)
 
+# FINAL SCREEN ##############################
+
+# New high score if player beats current high score
+if game.score > tetris_high_score:
+    tetris_high_score = game.score
+
+if game.status == "gameover":
+    screen.fill((0, 0, 0))
+
+    # Define and display text
+    text = font.render('GAME OVER', True, (255, 0, 0))
+    screen.blit(text, (400 / 2 - (text.get_rect().width) / 2,
+                    500 / 2 - (text.get_rect().height) / 2))
+
+    number_text = font.render(str('Score: ' + str(game.score)), True, (255, 0, 0))
+    screen.blit(number_text, (400 / 2 - number_text.get_rect().width / 2,
+                            500 / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
+
+    hs_text = font.render('High Score: '+str(tetris_high_score), True, (255, 0, 0))
+    screen.blit(hs_text, (400 / 2 - hs_text.get_rect().width / 2,
+                        500 / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
+
+    # Update display
+    pygame.display.flip()
+
+    # Wait 5 seconds then end
+    pygame.time.delay(5000)
 
 
 
