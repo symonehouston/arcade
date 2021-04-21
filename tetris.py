@@ -21,7 +21,7 @@ import pygame, random, os, pickle
 #April 20 - pieces are showing and dropping properly. only the long piece acts weird
 #   - score works
 #   - started working on different background options
-#April 21 (w Jess) 
+#April 21
 #   - loading screen
 #   - finish backgrounds
 #   - add messages for breaking lines
@@ -206,8 +206,7 @@ while not go:
             if event.key == pygame.K_SPACE:
                 game.moreDown()
             if event.key == pygame.K_ESCAPE:
-            #add a new option!!!!!!!!!! because you may not want to start new game
-                break
+                go = True
 
     if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
@@ -245,19 +244,38 @@ while not go:
     gameEnd = font1.render("Game Over", True, (0, 0, 55))
     gameEscape = font1.render("Press ESC", True, (0, 0, 55))
 
+    # FINAL SCREEN ##############################
+
+    # New high score if player beats current high score
+    if game.score > tetris_high_score:
+        tetris_high_score = game.score
+
     screen.blit(text, [15, 15])
     if game.status == "gameover":
-        screen.blit(gameEnd, [20, 200])
-        screen.blit(gameEscape, [25, 265])
+        screen.fill((0, 0, 0))
+
+        # Define and display text
+        text = font.render('GAME OVER', True, (255, 0, 0))
+        screen.blit(text, (screen_width / 2 - (text.get_rect().width) / 2,
+                       screen_height / 2 - (text.get_rect().height) / 2))
+
+        number_text = font.render(string_score, True, (255, 0, 0))
+        screen.blit(number_text, (screen_width / 2 - number_text.get_rect().width / 2,
+                              screen_height / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
+
+        hs_text = font.render(string_hs, True, (255, 0, 0))
+        screen.blit(hs_text, (screen_width / 2 - hs_text.get_rect().width / 2,
+                          screen_height / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
+
+        # Update display
+        pygame.display.flip()
+
+        # Wait 5 seconds then end
+        pygame.time.delay(5000)
 
     pygame.display.flip()
     clock.tick(25)
 
-# FINAL SCREEN ##############################
-
-# New high score if player beats current high score
-if game.score > tetris_high_score:
-    tetris_high_score = game.score
 
 
 
