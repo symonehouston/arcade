@@ -21,12 +21,17 @@ import pygame, random, os, pickle
 #April 20 - pieces are showing and dropping properly. only the long piece acts weird
 #   - score works
 #   - started working on different background options
+# time = 1 hour
 #April 21
-#   - loading screen
 #   - finish backgrounds
-#   - add messages for breaking lines
 #   - ensure whole arcade works
+# time = 2.5 hours
+#   - loading screen
+#   - add messages for breaking lines
 #   - finish commenting
+# time = .5 hour
+
+#tutorials that were helpful: https://www.techwithtim.net/tutorials/game-development-with-python/tetris-pygame/tutorial-1/ and https://levelup.gitconnected.com/writing-tetris-in-python-2a16bddb5318
 
 
 # FIND HIGH SCORE ##############################
@@ -34,6 +39,11 @@ score_dict = pickle.load(open("score_dict.p", "rb"))
 tetris_high_score = score_dict['tetris']
 # END FIND HIGH SCORE ##############################
 ####################################################
+
+# https://freesound.org/people/ProjectsU012/sounds/341695/
+button_sound = pygame.mixer.Sound(os.path.join('sounds', 'button.wav'))
+font = pygame.font.SysFont("comicsansms", 24)
+font1 = pygame.font.SysFont("comicsansms", 14)
 
 #shapes list
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
@@ -45,7 +55,7 @@ m3 = "Are you trying to get a high score?"
 message = [m1,m2,m3]
 
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
-sColor = [(50,0,50), (50,0,50),(0,0,139), (50,205,50), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
+sColor = [(50,0,50), (50,0,50), (100,0,45), (0,0,139), (0,100,0), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
 
 #class for Piece. time = 15 minutes
 class Pieces(object):
@@ -87,6 +97,7 @@ class Tetris:
     level = 2
     zoom = 20
 
+    #initialize the game
     def __init__(self, height, width):
         score = 0
         self.height = height
@@ -114,7 +125,7 @@ class Tetris:
                 for x in range(row, 1, -1):
                     for y in range(self.width):
                         self.grid[x][y] = self.grid[x - 1][y]
-        self.score += numLines ** 2
+        self.score += 10
 
     #need to check if a figure is out of bounds or touching something else
     #time = .5 hour(s)
@@ -167,6 +178,7 @@ class Tetris:
         self.figure.y -= 1
         self.stopMoving()
 
+#class to make background
 class Background(pygame.sprite.Sprite):
     # Initialize
     def __init__(self):
@@ -176,21 +188,62 @@ class Background(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect()
         self.rect.left, self.rect.top = (0, 0)
 
+#starts the game
 pygame.init()
+#dimensions of game
 size = (400, 500)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("Tetris")
 
-# ADD LOOP HERE
-    # SET JPEGS: tet = mario.jpeg
+#BACKGROUND CHOICES
+# Opening loop skin
+pickB = True
+while pickB:
+    # Fill the screen with black
+    screen.fill((0, 0, 0))
+
+    # Display text
+    text = font.render('Pick your background', True, (255, 255, 255))
+    screen.blit(text, (400 / 2 - text.get_rect().width / 2,
+                       500 / 2 - text.get_rect().height / 2))
+
+    option_text = font1.render('1 - mario, 2 - minecraft, 3 - smash, 4 - cream', True, (255, 255, 255))
+    screen.blit(option_text, (400 / 2 - option_text.get_rect().width / 2,
+                             500 / 2 - option_text.get_rect().height / 2 + text.get_rect().height))
+
+    # Event for loop
+    for event in pygame.event.get():
+
+        # Check for KEYDOWN event
+        if event.type == KEYDOWN:
+
+            # Check what key is pressed
+            if event.key == K_1:
+                tet = 'mario.jpeg'
+                pickB = False
+                button_sound.play()
+
+            if event.key == K_2:
+                tet = 'minecraft.jpeg'
+                pickB = False
+                button_sound.play()
+
+            if event.key == K_3:
+                tet = 'smash.png'
+                pickB = False
+                button_sound.play()
+
+            if event.key == K_4:
+                tet = 'cream.jpeg'
+                pickB = False
+                button_sound.play()
+
+    # Update display
+    pygame.display.flip()
 
 tet_bg = Background()
 
 
-
-
-
-# Loop until the user clicks the close button.
 go = False
 down = False
 clock = pygame.time.Clock()
@@ -228,16 +281,10 @@ while not go:
             if event.key == pygame.K_DOWN:
                 down = False
 
-    #this is the background:
-    #whichBackground = random.randint(0,2)
-    #1. basic color
-    #if whichBackground == 0:
-    screen.fill((246,229,199))
+    #make background appear
     screen.blit(tet_bg.surf, tet_bg.rect)
-    #elif whichBackground == 1:
 
-
-
+    #make grid appear
     for i in range(game.height):
         for j in range(game.width):
             pygame.draw.rect(screen, (128, 128, 128), [game.x + game.zoom * j, game.y + game.zoom * i, game.zoom, game.zoom], 1)
@@ -245,6 +292,7 @@ while not go:
                 pygame.draw.rect(screen, sColor[game.grid[i][j]],
                                  [game.x + game.zoom * j + 1, game.y + game.zoom * i + 1, game.zoom - 2, game.zoom - 1])
 
+    #print piece
     if game.figure is not None:
         for i in range(4):
             for j in range(4):
@@ -255,14 +303,13 @@ while not go:
                                       game.y + game.zoom * (i + game.figure.y) + 1,
                                       game.zoom - 2, game.zoom - 2])
 
-    font = pygame.font.SysFont('comicsans', 25, True, False)
-    font1 = pygame.font.SysFont('comicsans', 65, True, False)
+    #write score
     text = font.render("Score: " + str(game.score), True, (0, 0, 0))
-    gameEnd = font1.render("Game Over", True, (0, 0, 55))
-    gameEscape = font1.render("Press ESC", True, (0, 0, 55))
 
+    #show score
     screen.blit(text, [15, 15])
 
+    #stop game
     if game.status == "gameover":
         go = True
 
@@ -275,6 +322,7 @@ while not go:
 if game.score > tetris_high_score:
     tetris_high_score = game.score
 
+#end screen that reports high score
 if game.status == "gameover":
     screen.fill((0, 0, 0))
 
