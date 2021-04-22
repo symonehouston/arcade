@@ -31,6 +31,8 @@ import pygame, random, os, pickle
 # time = 1.5 hours
 #   - finish commenting
 # time = .5 hour
+#   - got messages to show
+# time = .5 hour 
 
 #tutorials that were helpful: https://www.techwithtim.net/tutorials/game-development-with-python/tetris-pygame/tutorial-1/ and https://levelup.gitconnected.com/writing-tetris-in-python-2a16bddb5318
 
@@ -50,10 +52,11 @@ font1 = pygame.font.SysFont("comicsansms", 14)
 shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],[[6, 7, 9, 10], [1, 5, 6, 10]],[[1, 2, 6, 10], [5, 6, 7, 9], [2, 6, 10, 11], [3, 5, 6, 7]],[[1, 4, 5, 6], [1, 4, 5, 9], [4, 5, 6, 9], [1, 5, 6, 9]],[[1, 2, 5, 6]],
 
 #user messages
-m1 = "Great job!"
+m1 = "Are things stacking up?"
 m2 = "You're doing good"
-m3 = "Are things stacking up?"
-message = [m1,m2,m3]
+m3 = "Great job!"
+m4 = "You got it"
+message = [m1,m2,m3,m4]
 
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
 sColor = [(50,0,50), (50,0,50), (100,0,45), (0,0,139), (0,100,0), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
@@ -311,15 +314,25 @@ while not go:
     #write score
     text = font.render("Score: " + str(game.score), True, (0, 0, 0))
 
-    #Display text
+    #Display positive text
     first += 1
-    if first > 150 and first < 400:
+    if first > 100 and first < 400:
         nice = font.render(message[0], True, (0, 0, 0))
-        screen.blit(nice, [200,15])
+        screen.blit(nice, [125,15])
 
-    if first > 400:
+    if first > 400 and first < 700:
         nice = font1.render(message[1], True, (0, 0, 0))
         screen.blit(nice, [200,20])
+
+    if first > 700 and first < 1000:
+        nice = font1.render(message[2], True, (0, 0, 0))
+        screen.blit(nice, [200,20])
+
+    if first > 1000 and first < 1300:
+        nice = font1.render(message[3], True, (0, 0, 0))
+        screen.blit(nice, [200,20])
+        if first == 1299:
+            first = 100
 
     #show score
     screen.blit(text, [15, 15])
