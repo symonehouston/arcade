@@ -31,6 +31,9 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
 - Read the prompt on the screen and click the appropriate key to play a game
 
 *Tetris*
+- Read the prompts on the screen 
+- Select (1), (2), (3), or (4) to choose a background
+- Using the right and left arrows to move your block from side to side 
 
 *Flappy Bird*
 
