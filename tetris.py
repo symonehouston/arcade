@@ -27,7 +27,8 @@ import pygame, random, os, pickle
 #   - ensure whole arcade works
 # time = 2.5 hours
 #   - loading screen
-#   - add messages for breaking lines
+#   - add messages for breaking lines (could not get this to work)
+# time = 1.5 hours
 #   - finish commenting
 # time = .5 hour
 
@@ -50,8 +51,8 @@ shapes =[[1, 5, 9, 13], [4, 5, 6, 7]],[[4, 5, 9, 10], [2, 6, 5, 9]],[[1, 2, 5, 9
 
 #user messages
 m1 = "Great job!"
-m2 = "You're good at this game."
-m3 = "Are you trying to get a high score?"
+m2 = "You're doing good"
+m3 = "Are things stacking up?"
 message = [m1,m2,m3]
 
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
@@ -85,6 +86,7 @@ class Pieces(object):
 
 #Tetris class: defines the game
 class Tetris:
+    global sayM
     width = 0
     height = 0
     status = "play"
@@ -115,6 +117,7 @@ class Tetris:
 
     def breakL(self):
         numLines = 0
+        sayM = True
         for row in range(1, self.height):
             zeros = 0
             for col in range(self.width):
@@ -125,7 +128,7 @@ class Tetris:
                 for x in range(row, 1, -1):
                     for y in range(self.width):
                         self.grid[x][y] = self.grid[x - 1][y]
-        self.score += 10
+        self.score += numLines ** 2
 
     #need to check if a figure is out of bounds or touching something else
     #time = .5 hour(s)
@@ -249,6 +252,7 @@ down = False
 clock = pygame.time.Clock()
 game = Tetris(20, 10)
 counter = 0
+first = 1
 
 while not go:
     if game.figure is None:
@@ -276,6 +280,7 @@ while not go:
                 game.moreDown()
             if event.key == pygame.K_ESCAPE:
                 go = True
+
 
     if event.type == pygame.KEYUP:
             if event.key == pygame.K_DOWN:
@@ -305,6 +310,16 @@ while not go:
 
     #write score
     text = font.render("Score: " + str(game.score), True, (0, 0, 0))
+
+    #Display text
+    first += 1
+    if first > 150 and first < 400:
+        nice = font.render(message[0], True, (0, 0, 0))
+        screen.blit(nice, [200,15])
+
+    if first > 400:
+        nice = font1.render(message[1], True, (0, 0, 0))
+        screen.blit(nice, [200,20])
 
     #show score
     screen.blit(text, [15, 15])
