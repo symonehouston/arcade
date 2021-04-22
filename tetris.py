@@ -32,7 +32,10 @@ import pygame, random, os, pickle
 #   - finish commenting
 # time = .5 hour
 #   - got messages to show
-# time = .5 hour 
+# time = .5 hour
+#April 22
+#   - merging error on github. spent morning retesting game
+#time = .5 hour
 
 #tutorials that were helpful: https://www.techwithtim.net/tutorials/game-development-with-python/tetris-pygame/tutorial-1/ and https://levelup.gitconnected.com/writing-tetris-in-python-2a16bddb5318
 
@@ -56,7 +59,8 @@ m1 = "Are things stacking up?"
 m2 = "You're doing good"
 m3 = "Great job!"
 m4 = "You got it"
-message = [m1,m2,m3,m4]
+m5 = "Keep Going!"
+message = [m1,m2,m3,m4,m5]
 
 #assign colors to the shape. i looked up the rgb values for the shapes on rapidtables.com
 sColor = [(50,0,50), (50,0,50), (100,0,45), (0,0,139), (0,100,0), (255,255,0), (0,191,255), (255,0,0), (255,105,180)]
@@ -115,9 +119,11 @@ class Tetris:
                 new_line.append(0)
             self.grid.append(new_line)
 
+    #create game piece
     def startSpot(self):
         self.figure = Pieces(3, 0)
 
+    #tally's score
     def breakL(self):
         numLines = 0
         sayM = True
@@ -164,6 +170,7 @@ class Tetris:
             self.figure.y -= 1
             self.stopMoving()
 
+    #rotate
     def rotate(self):
         temp = self.figure.rotateS
         self.figure.rotation()
@@ -247,6 +254,7 @@ while pickB:
     # Update display
     pygame.display.flip()
 
+#create background
 tet_bg = Background()
 
 
@@ -257,6 +265,7 @@ game = Tetris(20, 10)
 counter = 0
 first = 1
 
+#main game loop
 while not go:
     if game.figure is None:
         game.startSpot()
@@ -314,7 +323,7 @@ while not go:
     #write score
     text = font.render("Score: " + str(game.score), True, (0, 0, 0))
 
-    #Display positive text
+    #Display positive text message at top
     first += 1
     if first > 100 and first < 400:
         nice = font.render(message[0], True, (0, 0, 0))
@@ -331,7 +340,11 @@ while not go:
     if first > 1000 and first < 1300:
         nice = font1.render(message[3], True, (0, 0, 0))
         screen.blit(nice, [200,20])
-        if first == 1299:
+
+    if first > 1300 and first < 1700:
+        nice = font1.render(message[4], True, (0, 0, 0))
+        screen.blit(nice, [200,20])
+        if first == 1699:
             first = 100
 
     #show score
@@ -355,14 +368,18 @@ if game.status == "gameover":
     screen.fill((0, 0, 0))
 
     # Define and display text
+
+    #announce game over
     text = font.render('GAME OVER', True, (255, 0, 0))
     screen.blit(text, (400 / 2 - (text.get_rect().width) / 2,
                     500 / 2 - (text.get_rect().height) / 2))
 
+    #define current score
     number_text = font.render(str('Score: ' + str(game.score)), True, (255, 0, 0))
     screen.blit(number_text, (400 / 2 - number_text.get_rect().width / 2,
                             500 / 2 - number_text.get_rect().height / 2 + text.get_rect().height))
 
+    #define the games high score overall
     hs_text = font.render('High Score: '+str(tetris_high_score), True, (255, 0, 0))
     screen.blit(hs_text, (400 / 2 - hs_text.get_rect().width / 2,
                         500 / 2 - hs_text.get_rect().height / 2 + 2 * text.get_rect().height))
