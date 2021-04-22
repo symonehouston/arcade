@@ -14,7 +14,7 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
 - Open the "arcade" project on PyCharm
 - Go to "PyCharm" --> "Preferences" in the top bar
 - Open the "Project: arcade" tab in the "Preferences" box
-- Click "Python Interpreter" and select the newest version of Python available (we used Python 3.8)
+- Click "Python Interpreter" and select the newest version of Python available (we used Python 3.8, but 3.7 should work too!)
 - While still in the "Python Interpreter" tab, click the "+" button on the bottom left
 - Install "pygame" package
 - Select the "OK" button
@@ -31,9 +31,11 @@ We designed an arcade with three games: Tetris, Flappy Bird and Snake. The user 
 - Read the prompt on the screen and click the appropriate key to play a game
 
 *Tetris*
-- Read the prompts on the screen 
 - Select (1), (2), (3), or (4) to choose a background
-- Using the right and left arrows to move your block from side to side 
+- Use the right and left arrows to move your block from side to side 
+- Use the up arrow to rotate your shape 
+- Use the down arrow to make the shape fall faster 
+- Goal of the game: Fit the shapes together so a row is completely filled with blocks. This will clear the row. You want to clear as many rows as possible and avoid letting the blocks stack up. If they stack up and touch the top of the grid you lose. 
 
 *Flappy Bird*
 
